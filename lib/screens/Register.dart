@@ -88,6 +88,7 @@ class Register extends StatelessWidget {
               ),
             ),
             Container(
+              margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
               height: 60,
               width: 150,
               child: ElevatedButton(
