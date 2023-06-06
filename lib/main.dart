@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/screens/AddCard.dart';
 import 'package:flutter_application_2/screens/Home.dart';
 import 'package:flutter_application_2/screens/Login.dart';
 import 'package:flutter_application_2/screens/Address.dart';

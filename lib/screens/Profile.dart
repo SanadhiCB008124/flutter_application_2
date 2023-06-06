@@ -1,5 +1,6 @@
-import 'package:flutter_application_2/screens/AddCard.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/screens/CardDetails.dart';
 import 'package:flutter_application_2/screens/Settings.dart';
 import 'package:flutter_application_2/screens/Map.dart';
 
@@ -218,7 +219,7 @@ class Profile extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AddCard()),
+                    MaterialPageRoute(builder: (context) => CardDetails()),
                   );
                 },
                 child: const Text(
