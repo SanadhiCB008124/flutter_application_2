@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'Settings.dart';
 
@@ -17,6 +20,32 @@ class _MapState extends State<Map> {
   LatLng _markerPosition = const LatLng(45.521563, -122.677433); // Updated marker position
   final Set<Marker> _markers = {}; // Set to store the markers
 
+  @override
+  void initState() {
+    super.initState();
+    _getInitialLocation();
+  }
+
+  Future<void> _getInitialLocation() async {
+    // Request location permission
+    final PermissionStatus status = await Permission.location.request();
+    if (status != PermissionStatus.granted) {
+      // Handle permission denied case
+      return;
+    }
+
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      setState(() {
+        _markerPosition = LatLng(position.latitude, position.longitude);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     _addMarker(); // Add the marker when the map is created
@@ -26,7 +55,7 @@ class _MapState extends State<Map> {
     setState(() {
       _markers.add(
         Marker(
-          markerId: MarkerId('marker_1'),
+          markerId: const MarkerId('marker_1'),
           position: _markerPosition,
           draggable: true, // Make the marker draggable
           onDragEnd: (LatLng newPosition) {
@@ -36,8 +65,8 @@ class _MapState extends State<Map> {
             });
           },
           infoWindow: const InfoWindow(
-            title: 'Marker Title',
-            snippet: 'Marker Snippet',
+            title: 'Location',
+            //snippet: 'Marker Snippet',
           ),
           icon: BitmapDescriptor.defaultMarkerWithHue(0.0), // Red marker icon
         ),
@@ -45,22 +74,37 @@ class _MapState extends State<Map> {
     });
   }
 
+  Future<String> _getAddressFromLatLng(LatLng position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks != null && placemarks.isNotEmpty) {
+        Placemark placemark = placemarks[0];
+        String address = placemark.street ?? '';
+        address += placemark.subLocality != null ? ', ${placemark.subLocality}' : '';
+        address += placemark.locality != null ? ', ${placemark.locality}' : '';
+        address += placemark.subAdministrativeArea != null ? ', ${placemark.subAdministrativeArea}' : '';
+        address += placemark.administrativeArea != null ? ', ${placemark.administrativeArea}' : '';
+        address += placemark.postalCode != null ? ', ${placemark.postalCode}' : '';
+        address += placemark.country != null ? ', ${placemark.country}' : '';
+        return address;
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return ''; // Return an empty string if no address is found or an error occurs
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Choose your Location'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Settings()),
-              );
-            },
-          ),
-        ],
+      
         elevation: 2,
       ),
       body: Stack(
@@ -91,11 +135,25 @@ class _MapState extends State<Map> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    'Latitude: ${_markerPosition.latitude.toStringAsFixed(6)}',
-                  ),
-                  Text(
-                    'Longitude: ${_markerPosition.longitude.toStringAsFixed(6)}',
+                  FutureBuilder<String>(
+                    future: _getAddressFromLatLng(_markerPosition),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Address: ${snapshot.data}',
+                            style: TextStyle(fontSize: 16.0),),
+                           // Text('Latitude: ${_markerPosition.latitude.toStringAsFixed(6)}'),
+                           // Text('Longitude: ${_markerPosition.longitude.toStringAsFixed(6)}'),
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Text('Failed to get address');
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
                   ),
                 ],
               ),
