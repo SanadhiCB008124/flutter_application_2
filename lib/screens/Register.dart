@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/Home.dart';
 
 class Register extends StatelessWidget {
-  const Register({Key? key});
+  const Register({ Key? key});
 
   @override
   Widget build(BuildContext context) {

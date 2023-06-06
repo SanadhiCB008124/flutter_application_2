@@ -48,9 +48,9 @@ class SettingsState extends State<Settings> {
                     title: Text("Privacy"),
                     leading: Icon(Icons.help_outline_rounded),
                   ),
-                  ListTile(
-                    title: const Text("About"),
-                    leading: const Icon(Icons.info_outline_rounded),
+                  const ListTile(
+                    title: Text("About"),
+                    leading: Icon(Icons.info_outline_rounded),
                   ),
                 ],
               ),

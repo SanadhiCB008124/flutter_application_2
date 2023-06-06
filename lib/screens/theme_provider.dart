@@ -12,19 +12,27 @@ class ThemeProvider with ChangeNotifier {
     primarySwatch: Colors.purple,
     // Define your light theme colors here
     // For example:
-    // primaryColor: Colors.purple,
-    // accentColor: Colors.deepPurple,
-    // backgroundColor: Colors.white,
+     primaryColor: Colors.purple,
+  
+   
   );
 
   static final ThemeData _darkTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Colors.black,
-    // Define your dark theme colors here
-    // For example:
-    // primaryColor: Colors.deepPurple,
-    // accentColor: Colors.purpleAccent,
-    // backgroundColor: Colors.black,
+   
+   textTheme: const TextTheme(
+    bodyLarge: TextStyle(
+      color: Colors.white, // Set default text color
+    ),
+    
+  ),
+  buttonTheme: const ButtonThemeData(
+    buttonColor: Colors.purpleAccent, 
+   
+  ),
+   
+    
   );
 
   void toggleTheme() {

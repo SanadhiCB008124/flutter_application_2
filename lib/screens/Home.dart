@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/screens/Product.dart';
 import 'package:provider/provider.dart';
+
 import 'theme_provider.dart';
 import 'package:flutter_application_2/screens/Cart.dart';
 import 'package:flutter_application_2/screens/Favorites.dart';
@@ -73,8 +75,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
               onChanged: (value) {
-                // Handle search query changes here
-                // You can filter the articles based on the search query
+              
               },
             ),
           ),
@@ -112,10 +113,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else if (index == 1) {
        Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites()));
-      // Handle other navigation options
+    
     } else if (index == 2) {
        Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
-      // Handle other navigation options
+  
     }
     else if(index == 3){
        Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
@@ -183,7 +184,25 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   Widget buildArticleItem(Article item) {
-    return Container(
+   return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Product(
+            
+           title:item.title,
+           price:item.price,
+           image:item.imageUrl,
+           description: item.description,
+            
+            ),
+        ),
+      );
+
+    },
+    child :Container(
+    
       height: 136,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
       decoration: BoxDecoration(
@@ -193,6 +212,7 @@ class _CategoryPageState extends State<CategoryPage> {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: [
+          
           Container(
             width: 100,
             height: 100,
@@ -216,9 +236,9 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: [
                     Text(
                       item.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+                      style: const TextStyle( fontSize: 16),
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.visible,
                     ),
                     InkWell(
                       onTap: () {
@@ -233,7 +253,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                
                 Text(
                   item.price,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -245,7 +265,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
         ],
       ),
-    );
+    )); 
   }
 }
 
@@ -254,6 +274,7 @@ class Article {
   final String price;
   final String imageUrl;
   final String category;
+  final String description;
   bool isFavorite;
 
   Article({
@@ -261,6 +282,7 @@ class Article {
     required this.price,
     required this.imageUrl,
     required this.category,
+    required this.description,
     this.isFavorite = false,
   });
 }
@@ -269,38 +291,86 @@ final List<Article> _articles = [
   Article(
     title: "Caffe Latte",
     price: "900.00",
-    imageUrl: "Assets/images/macchiato.jpg",
+    imageUrl: "Assets/images/caffe latte.jpg",
     category: "Beverages",
+    description: "A latte is a coffee drink made with espresso and steamed milk. The term as used in English is a shortened form of the Italian caffè latte, caffelatte or caffellatte, which means 'milk coffee'.",
   ),
   Article(
     title: "Macchiato",
     price: "900.00",
     imageUrl: "Assets/images/macchiato.jpg",
     category: "Beverages",
+    description: "macchiato ,made with two shots of espresso",
+  ),
+   Article(
+    title: "Macchiato",
+    price: "900.00",
+    imageUrl: "Assets/images/macchiato.jpg",
+    category: "Beverages",
+    description: "macchiato ,made with two shots of espresso",
+  ),
+   Article(
+    title: "Espresso",
+    price: "900.00",
+    imageUrl: "Assets/images/espre.jpg",
+    category: "Beverages",
+    description: "Espresso is a coffee-brewing method of Italian origin, in which a small amount of nearly boiling water is forced under pressure through finely-ground coffee beans.",
   ),
   Article(
-    title: "Pizza",
+    title: "Bacon & Egg Sandwich",
     price: "900.00",
-    imageUrl: "Assets/images/fudge.jpg",
+    imageUrl: "Assets/images/bacon and egg.jpg",
     category: "Food",
+    description: "delicious bacon sandwich with a fried egg and a dash of tomato sauce",
   ),
   Article(
-    title: "Burger",
+    title: "Chicken Sandwich",
+    price: "900.00",
+    imageUrl: "Assets/images/chicken sandwich.jpg",
+    category: "Food",
+    description: "crispy chicken lased with spicy bbq sauce"
+  ),
+  Article(
+    title: "Croissant",
+    price: "900.00",
+    imageUrl: "Assets/images/croissant.jpg",
+    category: "Food",
+    description: "a cripsy outside and soft warm inside"
+  ),
+  Article(
+    title: "Potato Cheese",
+    price: "900.00",
+    imageUrl: "Assets/images/potato cheese.jpg",
+    category: "Food",
+    description: "crispy potatoes and gooey cheese"
+  ),
+  Article(
+    title: "Chocolate Fudge",
     price: "900.00",
     imageUrl: "Assets/images/fudge.jpg",
-    category: "Food",
+    category: "Cakes",
+    description: "delicious hazelnut fudge"
+  ),
+  Article(
+    title: "Red Velvet",
+    price: "900.00",
+    imageUrl: "Assets/images/red velvet.webp",
+    category: "Cakes",
+    description: "delicious red velvet cake with cream cheese frosting"
+  ),
+  Article(
+    title: "Blueberry Cheesecake",
+    price: "900.00",
+    imageUrl: "Assets/images/lemon blueberry cheesecake.webp",
+    category: "Cakes",
+    description: "delicious blueberry cheesecake with a lemon twist"
   ),
   Article(
     title: "Chocolate Cake",
     price: "900.00",
-    imageUrl: "Assets/images/fudge.jpg",
+    imageUrl: "Assets/images/chocolate cake with chocolate ganache.jpg",
     category: "Cakes",
-  ),
-  Article(
-    title: "Strawberry Cake",
-    price: "900.00",
-    imageUrl: "Assets/images/fudge.jpg",
-    category: "Cakes",
+    description: "delicious chocolate cake with chocolate ganache"
   ),
 ];
 
