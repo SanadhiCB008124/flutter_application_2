@@ -10,155 +10,200 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
-
   @override
   State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
-      final emailcontroller=TextEditingController();
-      final passwordcontroller=TextEditingController();
-      
-        
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a username';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter an email address';
+    }
+    if (!value.contains('@')) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 6) {
+      return 'Password should be at least 6 characters long';
+    }
+    return null;
+  }
+
+  void _registerUser() {
+    if (_formKey.currentState!.validate()) {
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
+
+      FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      }).catchError((e) {
+        print(e);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-  final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return  Scaffold(
-      
-       
-        body: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                child: SizedBox(
-                  width: 80,
-                  height: 90,
-                  child: Image.asset('Assets/images/cupcake.png'),
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
-                    ),
-                  ),
-                  
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextFormField(
-                  controller: emailcontroller,
-                  decoration: InputDecoration(
-                    labelText: '  Email',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextFormField(
-                  controller: passwordcontroller,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
-                    ),
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              
-              Container(
-                margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                width: 150,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+    return Scaffold(
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+            
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: SizedBox(
+                        width: 80,
+                        height: 90,
+                        child: Image.asset('Assets/images/cupcake.png'),
                       ),
                     ),
-                    backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
-                  ),
-                  onPressed: () {
-                    FirebaseAuth.instance.createUserWithEmailAndPassword(
-                      email: emailcontroller.text,
-                     password: passwordcontroller.text).
-                     then((value){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Home()),
-                    );
-                  }).catchError((e){
-                    print(e);
-                  });
-                  
-                  },
-                  child: Text('Register'),
-                  
+                    TextFormField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+            color: Colors.purple,
+            width: 2.0,),),
+                        enabledBorder: OutlineInputBorder(
+                           borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.purple, // Set the border color
+            width: 1.0,
+          ),),
+                      
+                        
+                      ),
+                     
+                      validator: _validateUsername,
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        focusedBorder: OutlineInputBorder(
+                          
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+            color: Colors.purple, 
+            width: 1.0,
+          ),
+                          
+                        ),
+                        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.purple, // Set the border color
+            width: 1.0,
+          ),
+                            ),      ),
+                      validator: _validateEmail,
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        focusedBorder: OutlineInputBorder(
+                          
+                          borderRadius: BorderRadius.circular(10.0),
+                          
+                          borderSide: BorderSide(
+            color: Colors.purple, 
+            width: 2.0,
+          ),),
+                        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.purple, // Set the border color
+            width: 1.0,
+          ),
+                          
+                        )
+                      ),
+                      obscureText: true,
+                      validator: _validatePassword,
+                    ),
+                    SizedBox(height: 16.0),
+                    Container(
+                      margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                      width: 150,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                          backgroundColor:
+                              themeProvider.themeData.elevatedButtonTheme.style!
+                                  .backgroundColor,
+                        ),
+                        onPressed: _registerUser,
+                        child: Text('Register'),
+                      ),
+                    ),
+                    Container(
+                      
+                     child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Login()),
+                          );
+                        },
+                        child: Text('Already Have an Account? Login Here'),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              TextButton(
-                  child: Text('Already have an account? Login',
-                  
-                  style:TextStyle(
-                    fontSize: 14,
-                  )),
-                 style: ButtonStyle(
-
-                 ),
-               onPressed : () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login()),
-                    );
-                  },
-             
-              )
-            ],
+            ),
           ),
-        ),
-      );
-    
+        ],
+      ),
+    );
   }
 }
