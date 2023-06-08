@@ -13,17 +13,24 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
-
-
   @override
   Widget build(BuildContext context) {
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.landscape) {
+      return buildLandscapeLayout();
+    } else {
+      return buildPortraitLayout();
+    }
+  }
+
+  Widget buildPortraitLayout() {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
       ),
       body: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
+        
           child: ListView(
             children: [
               _SingleSection(
@@ -60,15 +67,13 @@ class SettingsState extends State<Settings> {
               ListTile(
                 title: const Text("Logout"),
                 leading: const Icon(Icons.exit_to_app_rounded),
-              onTap: () async {
-  await FirebaseAuth.instance.signOut();
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => Login()),
-  );
-},
-
-               
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
               ),
               ListTile(
                 title: const Text("Delete Account"),
@@ -76,9 +81,86 @@ class SettingsState extends State<Settings> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>  Register()),
+                    MaterialPageRoute(builder: (context) => Register()),
                   );
                 },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildLandscapeLayout() {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Settings"),
+      ),
+      body: Center(
+        child: Container(
+       
+          child: Row(
+            children: [
+              Expanded(
+                child: _SingleSection(
+                  title: 'Settings',
+                  items: [
+                    Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) {
+                        return ListTile(
+                          title: const Text("Dark Mode"),
+                          leading: const Icon(Icons.dark_mode_outlined),
+                          trailing: Switch(
+                            value: themeProvider.isDark,
+                            onChanged: (value) {
+                              themeProvider.toggleTheme();
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    const ListTile(
+                      title: Text("Notifications"),
+                      leading: Icon(Icons.notifications_none_rounded),
+                    ),
+                    const ListTile(
+                      title: Text("Privacy"),
+                      leading: Icon(Icons.help_outline_rounded),
+                    ),
+                    const ListTile(
+                      title: Text("About"),
+                      leading: Icon(Icons.info_outline_rounded),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  children: [
+                    ListTile(
+                      title: const Text("Logout"),
+                      leading: const Icon(Icons.exit_to_app_rounded),
+                      onTap: () async {
+                        await FirebaseAuth.instance.signOut();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      title: const Text("Delete Account"),
+                      leading: const Icon(Icons.exit_to_app_rounded),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Register()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -103,17 +185,13 @@ class _SingleSection extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
+    
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+         
         ),
+       
         Column(
           children: items,
         ),
