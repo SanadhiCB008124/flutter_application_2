@@ -1,7 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/Product.dart';
 import 'package:provider/provider.dart';
-
 import 'theme_provider.dart';
 import 'package:flutter_application_2/screens/Cart.dart';
 import 'package:flutter_application_2/screens/Favorites.dart';
@@ -40,6 +40,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: Column(
         children: [
@@ -59,7 +60,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.purple, width: 2),
+              border: Border.all(
+                 color: themeProvider.isDark ? Colors.grey : Colors.purple,
+              
+              width: 2),
+
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextField(
@@ -86,11 +91,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               controller: _tabController,
               padding: const EdgeInsets.all(7),
               indicator: BoxDecoration(
+                color: themeProvider.themeData.tabBarTheme.indicatorColor,
+                
+
                 borderRadius: BorderRadius.circular(15),
-                color: const Color(0xFF4B1969),
               ),
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.black,
+              labelColor: themeProvider.themeData.tabBarTheme.labelColor,
+
+           
               physics: const BouncingScrollPhysics(),
               tabs: items.map((item) => Tab(text: item)).toList(),
             ),
@@ -104,14 +112,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+     
+  backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+
+
+      
         
         onTap: (int index) {
     setState(() {
       _selectedIndex = index;
     });
     if (index == 0) {
+      
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else if (index == 1) {
+
        Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites()));
     
     } else if (index == 2) {
@@ -124,33 +139,45 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   },
         items:  <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-     
-            backgroundColor: Colors.purple,
-            
+              backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+
+
             icon: Icon(Icons.home, ),
             label: 'Home',
            
            
+           
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.purple,
+              backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+
+      
+    
             icon: Icon(Icons.favorite,),
          
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.purple,
+              backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+
+        
             icon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.purple,
+             backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+
+           
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
+        selectedLabelStyle:
+         TextStyle(
+           fontSize: 0
+   
       ),
-    );
+    ));
   }
 }
 
@@ -236,7 +263,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: [
                     Text(
                       item.title,
-                      style: const TextStyle( fontSize: 16),
+                      style: const TextStyle( fontSize: 18),
                       maxLines: 2,
                       overflow: TextOverflow.visible,
                     ),
@@ -296,11 +323,11 @@ final List<Article> _articles = [
     description: "A latte is a coffee drink made with espresso and steamed milk. The term as used in English is a shortened form of the Italian caffè latte, caffelatte or caffellatte, which means 'milk coffee'.",
   ),
   Article(
-    title: "Macchiato",
+    title: "Cappucino",
     price: "900.00",
-    imageUrl: "Assets/images/macchiato.jpg",
+    imageUrl: "Assets/images/capuccino.jpg",
     category: "Beverages",
-    description: "macchiato ,made with two shots of espresso",
+    description: "Capuccino is an espresso-based coffee drink that originated in Italy, and is traditionally prepared with steamed milk foam.",
   ),
    Article(
     title: "Macchiato",
@@ -316,6 +343,36 @@ final List<Article> _articles = [
     category: "Beverages",
     description: "Espresso is a coffee-brewing method of Italian origin, in which a small amount of nearly boiling water is forced under pressure through finely-ground coffee beans.",
   ),
+  Article(
+    title: "Iced Milo",
+    price: "900.00",
+    imageUrl: "Assets/images/iced milo.jpg",
+    category: "Beverages",
+    description: "Iced Milo , milo tea ",
+  ),
+  Article(
+    title: "Iced Americano",
+    price: "900.00",
+    imageUrl: "Assets/images/iced americano.webp",
+    category: "Beverages",
+    description: "shots of espresso cooled with iced cubes.heaven on a warm day.",
+  ),
+   Article(
+    title: "Iced Mocha",
+    price: "900.00",
+    imageUrl: "Assets/images/iced mocha.jpg",
+    category: "Beverages",
+    description: "Espresso is a coffee-brewing method of Italian origin, in which a small amount of nearly boiling water is forced under pressure through finely-ground coffee beans.",
+  ),
+  Article(
+    title: "Strawberry Smoothie",
+    price: "900.00",
+    imageUrl: "Assets/images/strawberry smoothie.jpg",
+    category: "Beverages",
+    description: "Espresso is a coffee-brewing method of Italian origin, in which a small amount of nearly boiling water is forced under pressure through finely-ground coffee beans.",
+  ),
+  
+
   Article(
     title: "Bacon & Egg Sandwich",
     price: "900.00",
@@ -374,8 +431,3 @@ final List<Article> _articles = [
   ),
 ];
 
-void main() {
-  runApp(const MaterialApp(
-    home: Home(),
-  ));
-}

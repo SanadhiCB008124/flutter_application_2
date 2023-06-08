@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/Home.dart';
-import 'package:flutter_application_2/screens/Login.dart';
-import 'package:flutter_application_2/screens/Address.dart';
-import 'package:flutter_application_2/screens/Map.dart';
-import 'package:flutter_application_2/screens/Favorites.dart';
-import 'package:flutter_application_2/screens/Cart.dart';
-import 'package:flutter_application_2/screens/Product.dart';
-import 'package:flutter_application_2/screens/Profile.dart';
-import 'package:flutter_application_2/screens/Splash.dart';
-import 'package:flutter_application_2/screens/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_application_2/screens/theme_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -34,16 +29,6 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+  
 }
 
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-     
-    );
-  }

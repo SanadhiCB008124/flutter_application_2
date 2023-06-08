@@ -1,17 +1,30 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_2/screens/Home.dart';
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class Login extends StatefulWidget {
+   Login({super.key});
 
   @override
+  State<Login> createState() => _LoginState();
+
+
+}
+
+class _LoginState extends State<Login> {
+  @override
   Widget build(BuildContext context) {
+          final themeProvider = Provider.of<ThemeProvider>(context);
+
+  
     
     return Scaffold(
      
-     backgroundColor: const Color.fromARGB(255, 195, 157, 169),
+     
 
       body:Container(
         padding: const EdgeInsets.all(16.0),
@@ -21,24 +34,12 @@ class Login extends StatelessWidget {
           children: [
             Container(
                 child: SizedBox(
-    width: 90,
-    height: 100,
+               width: 80,
+                  height: 100,
     child:Image.asset('Assets/images/cupcake.png'),
   ),
             ),
-            Container(
-              margin: EdgeInsets.only(bottom: 44.0),
-              child: Text(
-                ' Sana Bakes',
-                
-                style: TextStyle(
-                  fontSize: 34.0,
-                  
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 177, 96, 147),
-                ),
-              ),
-            ),
+           
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -101,10 +102,13 @@ class Login extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const Home()));},
             
             style: ButtonStyle(
-              
-              backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 165, 103, 176),
-              )
-            ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
+                    backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+                  ),
              child: Padding(
                   padding: const EdgeInsets.all(8.0),
               child: Text('Login',
@@ -127,12 +131,12 @@ class Login extends StatelessWidget {
           child: Text('Sign in with Google'),
         ),
         Container(
-                child: SizedBox(
+              
     width: 50,
     height: 50,
     child:Image.asset('Assets/images/google.png'),
   ),
-            ),
+            
       
       ],
     ),

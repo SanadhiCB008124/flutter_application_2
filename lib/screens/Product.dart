@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/screens/theme_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../main.dart';
+import 'theme_provider.dart';
 
 class Product extends StatefulWidget {
-
   final String title;
   final String price;
   final String image;
   final String description;
 
-  const Product({Key? key,
-   required this.title,
+  const Product({
+    Key? key,
+    required this.title,
     required this.price,
-     required this.image,
-      required this.description
-  
+    required this.image,
+    required this.description,
   }) : super(key: key);
 
   @override
   _ProductState createState() => _ProductState();
 }
 
-
 class _ProductState extends State<Product> {
   int value = 1;
- 
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title:  Text(widget.title),
+        title: Text(widget.title),
       ),
       body: Column(
         children: [
@@ -41,18 +37,16 @@ class _ProductState extends State<Product> {
             width: MediaQuery.of(context).size.width,
             height: 300,
             child: Image.asset(widget.image, fit: BoxFit.cover),
-
           ),
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.all(8.0),
             child: Text(
               widget.title,
-             
               style: TextStyle(
+                color: themeProvider.themeData.textTheme.bodyLarge?.color,
                 fontSize: 30.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
             ),
           ),
@@ -63,7 +57,7 @@ class _ProductState extends State<Product> {
               widget.description,
               style: TextStyle(
                 fontSize: 18.0,
-                color: Colors.black,
+                color: themeProvider.themeData.textTheme.bodyMedium?.color,
               ),
             ),
           ),
@@ -87,10 +81,8 @@ class _ProductState extends State<Product> {
               style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
             ),
           ),
-         
           Row(
             children: [
-             
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -99,17 +91,21 @@ class _ProductState extends State<Product> {
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: 22.0),
-                  child:
-                      Icon(Icons.add_box_rounded, size: 30.0, color: Colors.black),
+                  child: Icon(Icons.add_box_rounded, size: 30.0,
+                  
+                   color: themeProvider.isDark ? Colors.grey : Colors.black,
+                   
+                   ),
                 ),
               ),
+              SizedBox(width: 10.0),
               Container(
                 child: Text(
                   value.toString(),
-                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
                 ),
               ),
-              
+              SizedBox(width: 10.0),
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -119,23 +115,27 @@ class _ProductState extends State<Product> {
                   });
                 },
                 child: Container(
-                  child:
-                      Icon(Icons.remove_circle_rounded, size: 30.0, color: Colors.black),
+                  child: Icon(Icons.remove_circle_rounded, size: 30.0,
+                  
+                   color: themeProvider.isDark ? Colors.grey : Colors.black,
+                   
+                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 30.0),
-           Container(
-            margin: EdgeInsets.only(left: 22.0),
-            child: Row(
-              children: [
-                ElevatedButton(
-                
-                  onPressed: () {
-                   
-                  },
-                  
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10.0),
+          height: 60.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {},
                 child: Text('Add to Cart'),
                 style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -143,31 +143,27 @@ class _ProductState extends State<Product> {
                       borderRadius: BorderRadius.circular(18.0),
                     ),
                   ),
+                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
                   minimumSize: MaterialStateProperty.all(Size(150, 60)),
-                )
                 ),
-                SizedBox(width: 40.0),
-                ElevatedButton(
-                  onPressed: () {
-                   
-                  },
-                  child: Text('Buy Now'),
-                   style: ButtonStyle(
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Buy Now'),
+                style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
                     ),
                   ),
+                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
                   minimumSize: MaterialStateProperty.all(Size(150, 60)),
-                )
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
-
-

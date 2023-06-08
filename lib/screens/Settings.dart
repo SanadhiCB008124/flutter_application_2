@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/theme_provider.dart';
 import 'package:flutter_application_2/screens/Login.dart';
 import 'package:flutter_application_2/screens/Register.dart';
-import 'package:provider/provider.dart';// Import the ThemeProvider class
+import 'package:provider/provider.dart';//theme provider class
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -60,7 +60,7 @@ class SettingsState extends State<Settings> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Login()),
+                    MaterialPageRoute(builder: (context) =>  Login()),
                   );
                 },
               ),
@@ -70,7 +70,7 @@ class SettingsState extends State<Settings> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Register()),
+                    MaterialPageRoute(builder: (context) =>  Register()),
                   );
                 },
               ),

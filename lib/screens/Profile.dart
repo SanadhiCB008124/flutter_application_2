@@ -1,14 +1,22 @@
-
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/CardDetails.dart';
 import 'package:flutter_application_2/screens/Settings.dart';
 import 'package:flutter_application_2/screens/Map.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({Key? key});
 
   @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  @override
   Widget build(BuildContext context) {
+  final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -35,18 +43,12 @@ class Profile extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.purple,
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+              
               child: TextFormField(
                 decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.edit),
                   labelText: 'Username',
-                  border: InputBorder.none,
+                   border: OutlineInputBorder(borderRadius: BorderRadius.zero),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 12.0,
@@ -56,18 +58,13 @@ class Profile extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.purple,
-                  width: 1.0,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+             
+             
               child: TextFormField(
                 decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.edit),
-                  labelText: 'Password',
-                  border: InputBorder.none,
+                  labelText: 'Email',
+                   border: OutlineInputBorder(borderRadius: BorderRadius.zero),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 12.0,
@@ -78,10 +75,11 @@ class Profile extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.all(16.0),
-              child: const Text(
+              child: Text(
                 'Saved Locations',
                 style: TextStyle(
-                  color: Colors.black,
+        color: themeProvider.themeData.textTheme.bodyMedium?.color,
+
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -154,7 +152,7 @@ class Profile extends StatelessWidget {
                 child: const Text(
                   'Add New Location',
                   style: TextStyle(
-                    color: Colors.purpleAccent,
+                    color: Color.fromRGBO(75, 25, 105, 1),
                     fontSize: 20.0,
                   ),
                 ),
@@ -162,6 +160,19 @@ class Profile extends StatelessWidget {
             ),
 
          SizedBox(height: 16.0),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              child:  Text(
+                'Saved Cards',
+                style: TextStyle(
+           color: themeProvider.themeData.textTheme.bodyMedium?.color,
+
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -225,7 +236,7 @@ class Profile extends StatelessWidget {
                 child: const Text(
                   'Add New Card',
                   style: TextStyle(
-                    color: Colors.purpleAccent,
+                    color: Color.fromRGBO(75, 25, 105, 1),
                     fontSize: 20.0,
                   ),
                 ),

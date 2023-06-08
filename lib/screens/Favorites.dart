@@ -133,8 +133,3 @@ final List<Article> _articles = [
   ),
 ];
 
-void main() {
-  runApp(const MaterialApp(
-    home: Favorites(),
-  ));
-}

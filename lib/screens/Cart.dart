@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/screens/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'theme_provider.dart';
 
-class Cart extends StatelessWidget {
+class Cart extends StatefulWidget {
   const Cart({Key? key}) : super(key: key);
 
   @override
+  State<Cart> createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
+  int value = 1;
+
+  @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cart'),
@@ -23,31 +32,30 @@ class Cart extends StatelessWidget {
             ),
           ),
           Container(
-  margin: const EdgeInsets.all(10),
-  height: 60,
-  width: 300,
-  child: ElevatedButton(
-    onPressed: () {},
-    style: ElevatedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-     backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.grey[50] // Light purple color in dark mode
-          : Colors.purple, // Purple color in light mode
-    ),
-    child: const Text("Go to Checkout"),
-  ),
-),
-
+            margin: const EdgeInsets.all(10),
+            height: 60,
+            width: 300,
+            child: ElevatedButton(
+              onPressed: () {},
+              child: Text("Go to Checkout"),
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                ),
+                backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget buildCartItem(Article item) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
-      height: 136,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFFE0E0E0)),
@@ -71,42 +79,28 @@ class Cart extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
+                 Container(
+                  margin: EdgeInsets.only(top:10),
                       child: Text(
                         item.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
+                        style: TextStyle(
+                          fontSize: 18.0,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.add_box),
-                        const Icon(Icons.delete),
-                      ]
-                          .map((e) => InkWell(
-                                onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: e,
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
+                    Container(
+                      child: Icon(Icons.delete),
+                      margin: EdgeInsets.only(left: 200.0)
+                      ),
+
+
+                    
+                    Container(
+               child: Text(
                   item.price,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
@@ -115,6 +109,53 @@ class Cart extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                    ),
+               
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          value++;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 22.0),
+                        child: Icon(
+                          Icons.add_box_rounded,
+                          size: 30.0,
+                          color: themeProvider.isDark ? Colors.grey : Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Container(
+                      child: Text(
+                        value.toString(),
+                        style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (value > 1) {
+                            value--;
+                          }
+                        });
+                      },
+                      child: Container(
+                        child: Icon(
+                          Icons.remove_circle_rounded,
+                          size: 30.0,
+                          color: themeProvider.isDark ? Colors.grey : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+               
               ],
             ),
           ),
@@ -152,9 +193,3 @@ final List<Article> _articles = [
     category: "Cakes",
   ),
 ];
-
-void main() {
-  runApp(const MaterialApp(
-    home: Cart(),
-  ));
-}
