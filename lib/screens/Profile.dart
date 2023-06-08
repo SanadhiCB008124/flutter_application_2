@@ -7,14 +7,20 @@ import 'package:flutter_application_2/screens/Settings.dart';
 import 'package:flutter_application_2/screens/Map.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key,});
+  final String savedLocation;
+
+  
+ Profile({Key? key,  required this.savedLocation});
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  late User? _user; // User object to store the currently signed-in user
+  
+  late User? _user;
+  
+  // User object to store the currently signed-in user
 
   @override
   void initState() {
@@ -118,7 +124,8 @@ class _ProfileState extends State<Profile> {
                               ),
                               SizedBox(height: 8.0),
                               Text(
-                                location.address,
+                               this.widget.savedLocation,
+
                                 style: const TextStyle(
                                   fontSize: 16.0,
                                 ),
@@ -155,7 +162,7 @@ class _ProfileState extends State<Profile> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Map()),
+                    MaterialPageRoute(builder: (context) => Map()),
                   );
                 },
                 child: const Text(

@@ -1,10 +1,10 @@
-// ignore_for_file: unused_import
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/screens/Profile.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Settings.dart';
 
@@ -26,6 +26,7 @@ class _MapState extends State<Map> {
   void initState() {
     super.initState();
     _getInitialLocation();
+    _loadMarkerPosition(); // Load the marker position from SharedPreferences
   }
 
   Future<void> _getInitialLocation() async {
@@ -48,6 +49,23 @@ class _MapState extends State<Map> {
     }
   }
 
+  Future<void> _loadMarkerPosition() async {
+    final prefs = await SharedPreferences.getInstance();
+    final double? latitude = prefs.getDouble('markerLatitude');
+    final double? longitude = prefs.getDouble('markerLongitude');
+    if (latitude != null && longitude != null) {
+      setState(() {
+        _markerPosition = LatLng(latitude, longitude);
+      });
+    }
+  }
+
+  Future<void> _saveMarkerPosition() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('markerLatitude', _markerPosition.latitude);
+    await prefs.setDouble('markerLongitude', _markerPosition.longitude);
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     _addMarker(); // Add the marker when the map is created
@@ -68,7 +86,6 @@ class _MapState extends State<Map> {
           },
           infoWindow: const InfoWindow(
             title: 'Location',
-            //snippet: 'Marker Snippet',
           ),
           icon: BitmapDescriptor.defaultMarkerWithHue(0.0), // Red marker icon
         ),
@@ -101,12 +118,27 @@ class _MapState extends State<Map> {
     return ''; // Return an empty string if no address is found or an error occurs
   }
 
+  Future<void> _submitLocation() async {
+    await _saveMarkerPosition(); // Save the marker position in SharedPreferences
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Location saved')),
+    );
+
+    String savedLocations = await _getAddressFromLatLng(_markerPosition);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Profile(savedLocation: savedLocations,), // Pass the saved location to the Profile page
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Choose your Location'),
-      
         elevation: 2,
       ),
       body: Stack(
@@ -144,10 +176,15 @@ class _MapState extends State<Map> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Address: ${snapshot.data}',
-                            style: TextStyle(fontSize: 16.0),),
-                           // Text('Latitude: ${_markerPosition.latitude.toStringAsFixed(6)}'),
-                           // Text('Longitude: ${_markerPosition.longitude.toStringAsFixed(6)}'),
+                            Text(
+                              'Address: ${snapshot.data}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: _submitLocation,
+                              child: const Text('Submit'),
+                            ),
                           ],
                         );
                       } else if (snapshot.hasError) {
