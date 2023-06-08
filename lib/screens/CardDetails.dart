@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:date_field/date_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardDetails extends StatelessWidget {
@@ -31,7 +30,8 @@ class _CardFormState extends State<CardForm> {
   final _cardNumberController = TextEditingController();
   final _cardNameController = TextEditingController();
   final _cvvController = TextEditingController();
-  DateTime? _expirationDate;
+  String? _selectedMonth;
+  String? _selectedYear;
 
   @override
   void dispose() {
@@ -45,7 +45,8 @@ class _CardFormState extends State<CardForm> {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('cardNumber', _cardNumberController.text);
     prefs.setString('cardName', _cardNameController.text);
-    prefs.setString('expirationDate', _expirationDate?.toString() ?? '');
+    prefs.setString('expirationMonth', _selectedMonth ?? '');
+    prefs.setString('expirationYear', _selectedYear ?? '');
     prefs.setString('cvv', _cvvController.text);
   }
 
@@ -53,18 +54,52 @@ class _CardFormState extends State<CardForm> {
     final prefs = await SharedPreferences.getInstance();
     final cardNumber = prefs.getString('cardNumber');
     final cardName = prefs.getString('cardName');
-    final expirationDate = prefs.getString('expirationDate');
+    final expirationMonth = prefs.getString('expirationMonth');
+    final expirationYear = prefs.getString('expirationYear');
     final cvv = prefs.getString('cvv');
 
-    // Use the retrieved values as needed
     _cardNumberController.text = cardNumber ?? '';
     _cardNameController.text = cardName ?? '';
+    _selectedMonth = expirationMonth;
+    _selectedYear = expirationYear;
     _cvvController.text = cvv ?? '';
-    setState(() {
-      _expirationDate = expirationDate != null
-          ? DateTime.parse(expirationDate)
-          : null;
-    });
+  }
+
+  Future<void> _checkStoredData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cardNumber = prefs.getString('cardNumber');
+    final cardName = prefs.getString('cardName');
+    final expirationMonth = prefs.getString('expirationMonth');
+    final expirationYear = prefs.getString('expirationYear');
+    final cvv = prefs.getString('cvv');
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Stored Data'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Card Number: $cardNumber'),
+              Text('Card Name: $cardName'),
+              Text('Expiration Month: $expirationMonth'),
+              Text('Expiration Year: $expirationYear'),
+              Text('CVV: $cvv'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -81,7 +116,7 @@ class _CardFormState extends State<CardForm> {
               labelText: 'Card Number',
             ),
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (value == null || value.isEmpty || value.length < 16 || value.contains( RegExp(r'[A-Z]'))) {
                 return 'Please enter the card number';
               }
               return null;
@@ -102,26 +137,86 @@ class _CardFormState extends State<CardForm> {
             },
           ),
           const SizedBox(height: 16.0),
-          DateTimeFormField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.zero),
-              labelText: 'Expiration Date',
-              suffixIcon: Icon(Icons.calendar_today),
-            ),
-            mode: DateTimeFieldPickerMode.date,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (DateTime? value) {
-              if (value == null) {
-                return 'Please enter the expiration date';
-              }
-              return null;
-            },
-            onDateSelected: (DateTime value) {
-              setState(() {
-                _expirationDate = value;
-              });
-            },
-            initialValue: _expirationDate,
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.zero),
+                    labelText: 'Expiration Month',
+                  ),
+                  value: _selectedMonth,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedMonth = value;
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty ) {
+                      return 'Please select the expiration month';
+                    }
+                    return null;
+                  },
+                  items: <String>[
+                    'January',
+                    'February',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December',
+                  ].map<DropdownMenuItem<String>>(
+                    (String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.zero),
+                    labelText: 'Expiration Year',
+                  ),
+                  value: _selectedYear,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedYear = value;
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select the expiration year';
+                    }
+                    return null;
+                  },
+                  items: <String>[
+                    '2023',
+                    '2024',
+                    '2025',
+                    '2026',
+                    '2027',
+                    '2028',
+                  ].map<DropdownMenuItem<String>>(
+                    (String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 16.0),
           TextFormField(
@@ -138,16 +233,27 @@ class _CardFormState extends State<CardForm> {
             },
           ),
           const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _saveFormData();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Form submitted')),
-                );
-              }
-            },
-            child: const Text('Submit'),
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _saveFormData();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Form submitted')),
+                    );
+                  }
+                },
+                child: const Text('Submit'),
+              ),
+              const SizedBox(width: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  _checkStoredData();
+                },
+                child: const Text('Check Data'),
+              ),
+            ],
           ),
         ],
       ),
