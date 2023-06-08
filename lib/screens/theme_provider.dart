@@ -51,7 +51,17 @@ class ThemeProvider with ChangeNotifier {
           ),
       ),
 
-   )
+   ),
+    navigationBarTheme:NavigationBarThemeData(
+      backgroundColor: Colors.black,
+     
+  
+   ),
+   iconTheme: IconThemeData(
+     color: Colors.white,
+     
+   ),
+
     
    
 
@@ -117,7 +127,16 @@ class ThemeProvider with ChangeNotifier {
           ),
       ),
 
-   )
+   ),
+   navigationBarTheme:NavigationBarThemeData(
+      backgroundColor: Colors.black,
+     
+  
+   ),
+iconTheme: IconThemeData(
+     color: Colors.grey,
+     
+   ),
   
   );
 

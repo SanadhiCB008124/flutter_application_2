@@ -7,7 +7,7 @@ import 'package:flutter_application_2/screens/Settings.dart';
 import 'package:flutter_application_2/screens/Map.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key});
+  const Profile({Key? key,});
 
   @override
   State<Profile> createState() => _ProfileState();

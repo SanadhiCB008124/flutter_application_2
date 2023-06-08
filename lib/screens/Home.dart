@@ -171,36 +171,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
+
             child: Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: themeProvider.isDark ? Colors.grey : Colors.purple,
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: 'What would you like?',
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                    },
-                  ),
-                ),
-                onChanged: (value) {},
-              ),
+            color: const Color.fromARGB(255, 15, 7, 30),
+             
+             child: Sidebar(
+              
+       
+             ),
             ),
           ),
           const SizedBox(width: 10),
           Expanded(
-            flex: 3,
+            flex: 5,
             child: Column(
               children: [
                 Container(
@@ -273,6 +257,9 @@ class _CategoryPageState extends State<CategoryPage> {
       },
     );
   }
+
+
+
 
   Widget buildArticleItem(Article item) {
     return GestureDetector(
@@ -493,3 +480,56 @@ final List<Article> _articles = [
 ];
 
 
+class Sidebar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        ListTile(
+          
+          leading: Icon(Icons.home,
+          size: 40,
+          
+          
+          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+       
+          
+          onTap: () {
+           
+          },
+        ),
+       
+        ListTile(
+          leading: Icon(Icons.favorite,size: 40,),
+          contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+       
+          
+          onTap: () {
+           
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.shopping_cart,size: 40,),
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          
+          onTap: () {
+            
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.person,size: 40,),
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+         
+          onTap: () {
+            
+          },
+          )
+    
+          
+      
+        // Add more list tiles for additional sidebar items
+      ],
+    );
+  }
+}
