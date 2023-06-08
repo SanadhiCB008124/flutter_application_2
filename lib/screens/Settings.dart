@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/theme_provider.dart';
 import 'package:flutter_application_2/screens/Login.dart';
@@ -12,6 +13,8 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +60,15 @@ class SettingsState extends State<Settings> {
               ListTile(
                 title: const Text("Logout"),
                 leading: const Icon(Icons.exit_to_app_rounded),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  Login()),
-                  );
-                },
+              onTap: () async {
+  await FirebaseAuth.instance.signOut();
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => Login()),
+  );
+},
+
+               
               ),
               ListTile(
                 title: const Text("Delete Account"),

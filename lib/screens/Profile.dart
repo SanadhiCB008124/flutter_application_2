@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,24 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  late User? _user; // User object to store the currently signed-in user
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser(); // Call a method to retrieve the currently signed-in user
+  }
+
+  Future<void> _getUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      _user = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-  final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,12 +59,21 @@ class _ProfileState extends State<Profile> {
             ),
             const SizedBox(height: 16.0),
             Container(
+              child: Text('Hi ${_user?.email ?? ''}' 
+              ,style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              )
+              ),
               
+              ), // Display the user's email
+            const SizedBox(height: 16.0),
+            Container(
               child: TextFormField(
                 decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.edit),
                   labelText: 'Username',
-                   border: OutlineInputBorder(borderRadius: BorderRadius.zero),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.zero),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 12.0,
@@ -57,29 +82,13 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             const SizedBox(height: 16.0),
-            Container(
-             
-             
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  suffixIcon: Icon(Icons.edit),
-                  labelText: 'Email',
-                   border: OutlineInputBorder(borderRadius: BorderRadius.zero),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 12.0,
-                  ),
-                ),
-                obscureText: true,
-              ),
-            ),
+          
             Container(
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Saved Locations',
                 style: TextStyle(
-        color: themeProvider.themeData.textTheme.bodyMedium?.color,
-
+                  color: themeProvider.themeData.textTheme.bodyMedium?.color,
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -158,21 +167,18 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-
-         SizedBox(height: 16.0),
+            SizedBox(height: 16.0),
             Container(
               padding: const EdgeInsets.all(16.0),
-              child:  Text(
+              child: Text(
                 'Saved Cards',
                 style: TextStyle(
-           color: themeProvider.themeData.textTheme.bodyMedium?.color,
-
+                  color: themeProvider.themeData.textTheme.bodyMedium?.color,
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -196,7 +202,6 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                               SizedBox(height: 8.0),
-                              
                             ],
                           ),
                           Align(
@@ -223,8 +228,7 @@ class _ProfileState extends State<Profile> {
                 );
               },
             ),
-         
-             Container(
+            Container(
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
                 onTap: () {
@@ -242,18 +246,11 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-
           ],
-       
-
-
-
         ),
-      ),
-    );
+     ));
   }
 }
-
 class Location {
   final String name;
   final String address;

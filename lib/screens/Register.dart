@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/Home.dart';
 import 'package:flutter_application_2/screens/Login.dart';
@@ -17,6 +18,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
       final emailcontroller=TextEditingController();
       final passwordcontroller=TextEditingController();
+      
+        
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class _RegisterState extends State<Register> {
               Container(
                 child: SizedBox(
                   width: 80,
-                  height: 100,
+                  height: 90,
                   child: Image.asset('Assets/images/cupcake.png'),
                 ),
               ),
@@ -55,7 +58,7 @@ class _RegisterState extends State<Register> {
                       vertical: 12.0,
                     ),
                   ),
-                  obscureText: true,
+                  
                 ),
               ),
               SizedBox(height: 16.0),
