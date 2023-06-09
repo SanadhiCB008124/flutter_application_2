@@ -25,6 +25,17 @@ class CardForm extends StatefulWidget {
   @override
   _CardFormState createState() => _CardFormState();
 }
+class CardData with ChangeNotifier {
+  String cardName = '';
+
+  void setCardName(String name) {
+    cardName = name;
+    notifyListeners();
+  }
+}
+
+
+
 
 class _CardFormState extends State<CardForm> {
   final _formKey = GlobalKey<FormState>();
@@ -55,6 +66,8 @@ class _CardFormState extends State<CardForm> {
     prefs.setString('expirationMonth', _selectedMonth ?? '');
     prefs.setString('expirationYear', _selectedYear ?? '');
     prefs.setString('cvv', _cvvController.text);
+    final cardName = _cardNameController.text;
+    Provider.of<CardData>(context, listen: false).setCardName(cardName);
   }
 
   Future<void> _loadFormData() async {
@@ -73,6 +86,7 @@ class _CardFormState extends State<CardForm> {
       _cvvController.text = cvv ?? '';
     });
   }
+  
 
   Future<void> _checkStoredData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -267,11 +281,14 @@ class _CardFormState extends State<CardForm> {
                   if (_formKey.currentState!.validate()) {
                     _saveFormData();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Form edited succesfully')),
+                      const SnackBar(content: Text('Form saved succesfully')),
                     );
+                    final cardData = Provider.of<CardData>(context, listen: false);
+      cardData.setCardName(_cardNameController.text);
+      Navigator.pop(context, _cardNameController.text);
                   }
                 },
-                child: const Text('Edit'),
+                child: const Text('Save'),
               ),
               const SizedBox(width: 16.0),
            //   ElevatedButton(
@@ -429,11 +446,15 @@ class _CardFormState extends State<CardForm> {
                       if (_formKey.currentState!.validate()) {
                         _saveFormData();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Form Edited succesfully')),
+                          const SnackBar(content: Text('Form saved succesfully')),
                         );
+                      final cardData = Provider.of<CardData>(context, listen: false);
+      cardData.setCardName(_cardNameController.text);
+      Navigator.pop(context, _cardNameController.text);  
+                       
                       }
                     },
-                    child: const Text('Edit'),
+                    child: const Text('Save'),
                   ),
                   const SizedBox(width: 16.0),
                 //  ElevatedButton(
@@ -452,9 +473,11 @@ class _CardFormState extends State<CardForm> {
   }
 
 
-  @override
-  Widget build(BuildContext context) {
-    return OrientationBuilder(
+ @override
+Widget build(BuildContext context) {
+  return ChangeNotifierProvider(
+    create: (_) => CardData(),
+    child: OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         if (orientation == Orientation.portrait) {
           return _buildPortraitLayout();
@@ -462,6 +485,8 @@ class _CardFormState extends State<CardForm> {
           return _buildLandscapeLayout();
         }
       },
-    );
-  }
+    ),
+  );
+}
+
 }

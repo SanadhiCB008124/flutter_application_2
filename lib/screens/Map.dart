@@ -129,7 +129,7 @@ class _MapState extends State<Map> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Profile(savedLocation: savedLocations,), // Pass the saved location to the Profile page
+        builder: (context) => Profile(savedLocation: savedLocations,cardName: '',), // Pass the saved location to the Profile page
       ),
     );
   }

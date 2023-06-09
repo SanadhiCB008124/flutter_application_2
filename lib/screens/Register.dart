@@ -136,6 +136,10 @@ Widget buildPortraitLayout(ThemeProvider themeProvider){
                         controller: _usernameController,
                         decoration: InputDecoration(
                           labelText: 'Username',
+                           labelStyle: TextStyle(
+                        color: Colors.grey,
+                        
+                      ),
                           border: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 16.0,
@@ -160,6 +164,10 @@ Widget buildPortraitLayout(ThemeProvider themeProvider){
                         controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Email',
+                           labelStyle: TextStyle(
+                        color: Colors.grey,
+                        
+                      ),
                           border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -183,6 +191,10 @@ Widget buildPortraitLayout(ThemeProvider themeProvider){
                         controller: _passwordController,
                         decoration: InputDecoration(
                           labelText: 'Password',
+                           labelStyle: TextStyle(
+                        color: Colors.grey,
+                        
+                      ),
                           border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -258,83 +270,87 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
               ),
             ),
             SizedBox(height: 16.0),
-            TextFormField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'Username',
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 12.0,
-                  horizontal: 16.0,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                    color: Colors.purple,
-                    width: 1.0,
+            Container(
+               decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 177, 96, 147),
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                    color: Colors.purple,
-                    width: 1.0,
+              child: TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                   labelStyle: TextStyle(
+                          color: Colors.grey,
+                          
+                        ),
+                      border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
                   ),
+                 
                 ),
+                validator: _validateUsername,
               ),
-              validator: _validateUsername,
             ),
             SizedBox(height: 16.0),
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 12.0,
-                  horizontal: 16.0,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                    color: Colors.purple,
-                    width: 1.0,
+            Container(  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 177, 96, 147),
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                    color: Colors.purple,
-                    width: 1.0,
+              child: TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                   labelStyle: TextStyle(
+                          color: Colors.grey,
+                          
+                        ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
                   ),
+                  border: InputBorder.none,
+                 
                 ),
+                validator: _validateEmail,
               ),
-              validator: _validateEmail,
             ),
             SizedBox(height: 16.0),
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 12.0,
-                  horizontal: 16.0,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                    color: Colors.purple,
-                    width: 2.0,
+            Container(
+              decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 177, 96, 147),
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(
-                    color: Colors.purple,
-                    width: 1.0,
+              child: TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                   labelStyle: TextStyle(
+                          color: Colors.grey,
+                          
+                        ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 16.0,
                   ),
+                 border: InputBorder.none,
                 ),
+                obscureText: true,
+                validator: _validatePassword,
               ),
-              obscureText: true,
-              validator: _validatePassword,
             ),
             SizedBox(height: 16.0),
             Container(

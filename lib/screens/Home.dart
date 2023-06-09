@@ -72,7 +72,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           } else if (index == 2) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
           } else if (index == 3) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '')));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '',cardName: '',)));
           }
         },
         items: <BottomNavigationBarItem>[

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/screens/CardDetails.dart';
 import 'package:flutter_application_2/screens/Home.dart';
 import 'package:flutter_application_2/screens/Login.dart';
 import 'package:flutter_application_2/screens/Splash.dart';
@@ -14,8 +15,15 @@ void main() async {
    WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers:[
+        ChangeNotifierProvider<CardData>(
+          create: (_) => CardData(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider(),
+        ),
+      ] ,
       child: MyApp(),
     ),
   );

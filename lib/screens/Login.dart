@@ -80,8 +80,12 @@ class _LoginState extends State<Login> {
                   ),
                   child: TextFormField(
                     controller: emailController,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       labelText: 'Email',
+                      labelStyle: TextStyle(
+                        color: Colors.grey,
+                        
+                      ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -102,8 +106,12 @@ class _LoginState extends State<Login> {
                   ),
                   child: TextFormField(
                     controller: passwordController,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
                       labelText: 'Password',
+                       labelStyle: TextStyle(
+                        color: Colors.grey,
+                        
+                      ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -215,6 +223,10 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
               controller: emailController,
               decoration: const InputDecoration(
                 labelText: 'Email',
+                labelStyle: TextStyle(
+                        color: Colors.grey,
+                        
+                      ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 16.0,
@@ -237,6 +249,10 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
               controller: passwordController,
               decoration: const InputDecoration(
                 labelText: 'Password',
+                 labelStyle: TextStyle(
+                        color: Colors.grey,
+                        
+                      ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 16.0,

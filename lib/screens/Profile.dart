@@ -8,9 +8,10 @@ import 'package:flutter_application_2/screens/Map.dart';
 
 class Profile extends StatefulWidget {
   final String savedLocation;
+  final String cardName;
 
   
- Profile({Key? key,  required this.savedLocation});
+ Profile({Key? key,  required this.savedLocation, required this.cardName});
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -37,6 +38,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+     final cardData = Provider.of<CardData>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
@@ -124,6 +126,7 @@ class _ProfileState extends State<Profile> {
                                 location.name,
                                 style: const TextStyle(
                                   fontSize: 18.0,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -174,10 +177,7 @@ class _ProfileState extends State<Profile> {
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Map()),
-                  );
+                 
                 },
                 child:  Text(
                   '+ Add New Location',
@@ -220,9 +220,11 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                CardItem.name,
+                               cardData.cardName,
                                 style:TextStyle(
+
                                   fontSize: 18.0,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -297,7 +299,7 @@ class CardItem {
 }
 
 final List<CardItem> cards = [
-  CardItem(name: 'Visa'),
+  CardItem(name: ''),
   // Add more card items here
 ];
 

@@ -115,6 +115,7 @@ class SettingsState extends State<Settings> {
                             value: themeProvider.isDark,
                             onChanged: (value) {
                               themeProvider.toggleTheme();
+                             
                             },
                           ),
                         );
