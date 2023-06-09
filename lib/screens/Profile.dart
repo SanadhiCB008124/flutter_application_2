@@ -239,6 +239,10 @@ class _ProfileState extends State<Profile> {
                                     icon: const Icon(Icons.edit,
                                     color: Colors.black,),
                                     onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => CardDetails()),
+                                      );
                                     
                                     },
                                   ),
@@ -257,10 +261,7 @@ class _ProfileState extends State<Profile> {
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CardDetails()),
-                  );
+                  
                 },
                 child:  Text(
                   '+Add New Card',
