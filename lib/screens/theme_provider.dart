@@ -36,8 +36,7 @@ class ThemeProvider with ChangeNotifier {
     ),
      bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Color.fromRGBO(75, 25, 105, 1),
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white,
+    
     ),
      tabBarTheme: TabBarTheme(
       indicatorColor: Color(0xFF4B1969),
@@ -57,10 +56,7 @@ class ThemeProvider with ChangeNotifier {
      
   
    ),
-   iconTheme: IconThemeData(
-     color: Colors.white,
-     
-   ),
+  
 
     
    
@@ -92,11 +88,14 @@ class ThemeProvider with ChangeNotifier {
       ),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-
+     
       backgroundColor:  Color.fromARGB(255, 36, 34, 34),
-        
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.grey,
+      
+      selectedIconTheme: IconThemeData(
+        size: 30,
+      ),
+      
+      
     ),
     textTheme: TextTheme(
       bodyMedium: TextStyle(
@@ -112,10 +111,6 @@ class ThemeProvider with ChangeNotifier {
       unselectedLabelColor: Colors.white,
     ),
 
-    switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.all(Colors.purple),
-      trackColor: MaterialStateProperty.all(Colors.grey),
-    ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.black,),
 
@@ -133,10 +128,7 @@ class ThemeProvider with ChangeNotifier {
      
   
    ),
-iconTheme: IconThemeData(
-     color: Colors.grey,
-     
-   ),
+
   
   );
 

@@ -68,7 +68,7 @@ class _FavoritesState extends State<Favorites> {
                     Expanded(
                       child: Text(
                         item.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                        style: const TextStyle(fontSize: 18),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -80,8 +80,8 @@ class _FavoritesState extends State<Favorites> {
                         });
                       },
                       child: Icon(
-                        item.isFavorite ? Icons.favorite : Icons.favorite_outline,
-                        color: item.isFavorite ? Colors.red : null,
+                        item.isFavorite ? Icons.favorite_outline : Icons.favorite,
+                        color: item.isFavorite ? Colors.black :Colors.red,
                       ),
                     ),
                   ],
@@ -89,7 +89,7 @@ class _FavoritesState extends State<Favorites> {
                 const SizedBox(height: 8),
                 Text(
                   item.price,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

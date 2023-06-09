@@ -33,11 +33,11 @@ class _CartState extends State<Cart> {
           ),
           Container(
             margin: const EdgeInsets.all(10),
-            height: 60,
+            
             width: 300,
             child: ElevatedButton(
               onPressed: () {},
-              child: Text("Go to Checkout"),
+              child: Text(" Checkout"),
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -85,27 +85,26 @@ class _CartState extends State<Cart> {
                   margin: EdgeInsets.only(top:10),
                       child: Text(
                         item.title,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+                        style: const TextStyle(fontSize: 20),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Container(
-                      child: Icon(Icons.delete),
+                      alignment: Alignment.topRight,
+                      child: Icon(Icons.delete,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
+                    ),
                       margin: EdgeInsets.only(left: 200.0)
                       ),
 
-
-                    
                     Container(
                child: Text(
                   item.price,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                 
+                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                   
+                  
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -113,6 +112,8 @@ class _CartState extends State<Cart> {
                
                 const SizedBox(height: 8),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
                       onTap: () {

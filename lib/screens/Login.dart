@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
  return Scaffold(
-  
+  backgroundColor:  Color.fromARGB(255, 173, 140, 179),
     body: OrientationBuilder(
       builder: (context, orientation) {
         // Portrait mode
@@ -49,6 +49,7 @@ class _LoginState extends State<Login> {
   
   Widget buildPortraitLayout(ThemeProvider themeProvider) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,6 +68,7 @@ class _LoginState extends State<Login> {
                     child: Image.asset('Assets/images/cupcake.png'),
                   ),
                 ),
+               
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -161,8 +163,8 @@ class _LoginState extends State<Login> {
                             child: const Text(
                               'No Account? Register Here',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
+                                color: Color(0xFF4B1969),
+                          fontSize: 17,
                               ),
                             ),
                           ),
@@ -171,6 +173,8 @@ class _LoginState extends State<Login> {
                        
                       ],
                     ),
+                   Text(widget.errorMessage ?? '',
+                        style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ],
@@ -181,6 +185,8 @@ class _LoginState extends State<Login> {
     );
   }
 Widget buildLandscapeLayout(ThemeProvider themeProvider) {
+      final themeProvider = Provider.of<ThemeProvider>(context);
+
   return SingleChildScrollView(
     child: Container(
       padding: const EdgeInsets.all(16.0),
@@ -286,7 +292,8 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
                     'No Account? Register Here',
                     style: TextStyle(
                       
-                      fontSize: 15,
+                       color: Color(0xFF4B1969),
+                          fontSize: 17,
                     ),
                   ),
                 ),
@@ -294,6 +301,8 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
               ),
             ],
           ),
+            Text(widget.errorMessage ?? '',
+                        style: TextStyle(color: Colors.red)),
         ],
       ),
     ),

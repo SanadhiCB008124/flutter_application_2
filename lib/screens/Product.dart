@@ -7,6 +7,8 @@ class Product extends StatefulWidget {
   final String price;
   final String image;
   final String description;
+ 
+
 
   const Product({
     Key? key,
@@ -14,6 +16,10 @@ class Product extends StatefulWidget {
     required this.price,
     required this.image,
     required this.description,
+   
+
+    
+   
   }) : super(key: key);
 
   @override
@@ -70,6 +76,7 @@ Widget buildPortraitLayout(ThemeProvider themeProvider) {
         ),
       ),
       SizedBox(height: 5.0),
+      
       Container(
         margin: EdgeInsets.all(10.0),
         child: Text(
@@ -144,42 +151,37 @@ Widget buildPortraitLayout(ThemeProvider themeProvider) {
         ],
       ),
       SizedBox(height: 30.0),
-      BottomAppBar(
-        child: Container(
-          margin: EdgeInsets.only(bottom: 10),
-          
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Add to Cart'),
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
-                  minimumSize: MaterialStateProperty.all(Size(150, 60)),
+ 
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('Add to Cart'),
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Buy Now'),
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
-                  minimumSize: MaterialStateProperty.all(Size(150, 60)),
-                ),
-              ),
-            ],
+              backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+              minimumSize: MaterialStateProperty.all(Size(150, 60)),
+            ),
           ),
-        ),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('Buy Now'),
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+              ),
+              backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+              minimumSize: MaterialStateProperty.all(Size(150, 60)),
+            ),
+          ),
+        ],
       ),
     ],
   ));
@@ -190,105 +192,113 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
       appBar: AppBar(
         title:  Text(widget.title),
       ),
-      body:Center(
-        child: Row(
-    children: [
-      
-      Container(
-           width: 300,
-        child: Expanded(
-       
-        flex: 1,
-        child: Container(
-          decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(widget.image), // Provide the asset image path as a string
-          fit: BoxFit.cover,
-        ),
-          ),
-        ),
-      ),
-      ),
-              SizedBox(width: 16),
-              Expanded(
-               
-                flex: 2,
-                child: Column(
-                 
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(padding: EdgeInsets.all(10.0)),
-                     Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontSize: 18,
-                       
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      widget.description,
-                      style: TextStyle(
-                        fontSize: 18,
-                       
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(widget.price,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  Row(
-        children: [
+      body:SingleChildScrollView(
+        child: Center(
+          child: Row(
+          children: [
+        
+        Container(
+             width: 300,
+             height: 330,
+          child: Expanded(
          
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star_border, color: Colors.yellow),
-          SizedBox(width: 10.0),
-          Text('Reviews'),
-        ],
-      ),
-
-
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                         ElevatedButton(
-                onPressed: () {},
-                child: Text('Add to Cart'),
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
-                  minimumSize: MaterialStateProperty.all(Size(150, 60)),
-                ),
-              ),
-                        SizedBox(width: 16),
-                         ElevatedButton(
-                onPressed: () {},
-                child: Text('Buy Now'),
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
-                  minimumSize: MaterialStateProperty.all(Size(150, 60)),
-                ),
-              ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          flex: 1,
+          child: Container(
+            decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(widget.image), // Provide the asset image path as a string
+            fit: BoxFit.cover,
+          ),
+            ),
           ),
         ),
+        ),
+                SizedBox(width: 16),
+                Expanded(
+                 
+                  flex: 2,
+                  child: Column(
+                   
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(padding: EdgeInsets.all(7.0)),
+                       Text(
+                        widget.title,
+                        style: TextStyle(
+                         fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+                         
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        widget.description,
+                        style: TextStyle(
+                          fontSize: 18,
+                         
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Text(widget.price,
+                        style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+                      ),
+                    Row(
+          children: [
+           
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star_border, color: Colors.yellow),
+            SizedBox(width: 10.0),
+            Text('Reviews'),
+          ],
+        ),
+      
+          
+           SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: 
+                        CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                         
+                           ElevatedButton(
+                  onPressed: () {},
+                  child: Text('Add to Cart'),
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
+                    backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+                    minimumSize: MaterialStateProperty.all(Size(150, 60)),
+                  ),
+                ),
+                          SizedBox(width: 16),
+                           ElevatedButton(
+                  onPressed: () {},
+                  child: Text('Buy Now'),
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                    ),
+                    backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+                    minimumSize: MaterialStateProperty.all(Size(150, 60)),
+                  ),
+                ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ),
       );
 
 }

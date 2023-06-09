@@ -58,6 +58,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
         currentIndex: _selectedIndex,
+        fixedColor:Colors.white,
+        unselectedItemColor: Colors.white,
+        
         onTap: (int index) {
           setState(() {
             _selectedIndex = index;
@@ -75,22 +78,38 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home,
+            size: 28,
+           
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(Icons.favorite),
+            
+            icon: Icon(Icons.favorite,
+            
+            
+            size: 28,
+           
+             ),
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
             backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(Icons.shopping_cart),
+            
+            icon: Icon(Icons.shopping_cart,
+            size: 28,
+            ),
             label: 'Cart',
           ),
           BottomNavigationBarItem(
             backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person,
+            size: 28,
+            
+           
+            ),
             label: 'Profile',
           ),
         ],
@@ -170,18 +189,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Center(
       child: Row(
         children: [
-          Expanded(
-            flex: 1,
-
-            child: Container(
-            color: const Color.fromARGB(255, 15, 7, 30),
-             
-             child: Sidebar(
-              
-       
-             ),
-            ),
-          ),
+          
           const SizedBox(width: 10),
           Expanded(
             flex: 5,
@@ -194,13 +202,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   child: const Text(
                     'Explore',
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 60,
+                  height: 50,
                   width: double.infinity,
                   child: TabBar(
                     controller: _tabController,
@@ -321,7 +329,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         },
                         child: Icon(
                           item.isFavorite ? Icons.favorite : Icons.favorite_outline,
-                          color: item.isFavorite ? Colors.red : null,
+                          color: item.isFavorite ? Colors.red :Colors.black,
                         ),
                       ),
                     ],
@@ -480,56 +488,3 @@ final List<Article> _articles = [
 ];
 
 
-class Sidebar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ListTile(
-          
-          leading: Icon(Icons.home,
-          size: 40,
-          
-          
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-       
-          
-          onTap: () {
-           
-          },
-        ),
-       
-        ListTile(
-          leading: Icon(Icons.favorite,size: 40,),
-          contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-       
-          
-          onTap: () {
-           
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.shopping_cart,size: 40,),
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          
-          onTap: () {
-            
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.person,size: 40,),
-          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-         
-          onTap: () {
-            
-          },
-          )
-    
-          
-      
-        // Add more list tiles for additional sidebar items
-      ],
-    );
-  }
-}

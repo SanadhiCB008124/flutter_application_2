@@ -61,13 +61,16 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               width: 100,
               height: 150,
-              child: Image.asset('Assets/images/user.png'),
+              child:Icon(Icons.person_2_outlined,size: 100.0,)
+              
+              
             ),
             const SizedBox(height: 16.0),
             Container(
-              child: Text('Hi ${_user?.email ?? ''}' 
+              child: Text('Hi! ${_user?.email ?? ''}' 
               ,style: TextStyle(
                 fontSize: 20.0,
+                color: Color.fromARGB(255, 173, 66, 192),
                 fontWeight: FontWeight.bold,
               )
               ),
@@ -101,6 +104,7 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             ListView.builder(
+              
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: locations.length,
@@ -108,6 +112,7 @@ class _ProfileState extends State<Profile> {
                 final location = locations[index];
                 return Container(
                   child: Card(
+                  color: const Color.fromARGB(255, 173, 140, 179),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Stack(
@@ -123,26 +128,34 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                               SizedBox(height: 8.0),
+                                Padding(padding: EdgeInsets.all(10.0)),
                               Text(
+                              
                                this.widget.savedLocation,
 
                                 style: const TextStyle(
-                                  fontSize: 16.0,
+                                  fontSize: 19.0,
                                 ),
                               ),
                             ],
                           ),
+                       
                           Align(
                             alignment: Alignment.topRight,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding:  EdgeInsets.all(10.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
+                                 
                                   IconButton(
-                                    icon: const Icon(Icons.edit),
+                                    icon: const Icon(Icons.edit,
+                                    color: Colors.black,),
                                     onPressed: () {
-                                      // Add your edit button logic here
+                                      Navigator.push(
+                                       context,
+                                       MaterialPageRoute(builder: (context) => Map()),
+                                     );
                                     },
                                   ),
                                 ],
@@ -156,6 +169,7 @@ class _ProfileState extends State<Profile> {
                 );
               },
             ),
+        
             Container(
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
@@ -165,14 +179,16 @@ class _ProfileState extends State<Profile> {
                     MaterialPageRoute(builder: (context) => Map()),
                   );
                 },
-                child: const Text(
-                  'Add New Location',
+                child:  Text(
+                  '+ Add New Location',
                   style: TextStyle(
-                    color: Color.fromRGBO(75, 25, 105, 1),
-                    fontSize: 20.0,
+                   color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Color.fromRGBO(75, 25, 105, 1),
+
+                    fontSize: 19.0,
                   ),
                 ),
               ),
+              
             ),
             SizedBox(height: 16.0),
             Container(
@@ -194,22 +210,23 @@ class _ProfileState extends State<Profile> {
                 final CardItem = cards[index];
                 return Container(
                   child: Card(
+                    color: const Color.fromARGB(255, 173, 140, 179),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Stack(
                         children: [
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
                                 CardItem.name,
-                                style: const TextStyle(
+                                style:TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 8.0),
-                            ],
+                              ],
                           ),
                           Align(
                             alignment: Alignment.topRight,
@@ -219,9 +236,10 @@ class _ProfileState extends State<Profile> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.edit),
+                                    icon: const Icon(Icons.edit,
+                                    color: Colors.black,),
                                     onPressed: () {
-                                      // Add your edit button logic here
+                                    
                                     },
                                   ),
                                 ],
@@ -244,11 +262,12 @@ class _ProfileState extends State<Profile> {
                     MaterialPageRoute(builder: (context) => CardDetails()),
                   );
                 },
-                child: const Text(
-                  'Add New Card',
+                child:  Text(
+                  '+Add New Card',
                   style: TextStyle(
-                    color: Color.fromRGBO(75, 25, 105, 1),
-                    fontSize: 20.0,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Color.fromRGBO(75, 25, 105, 1),
+                    
+                    fontSize: 19.0,
                   ),
                 ),
               ),

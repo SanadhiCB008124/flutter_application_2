@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/Home.dart';
 import 'package:flutter_application_2/screens/Login.dart';
 import 'package:flutter_application_2/screens/theme_provider.dart';
+import 'package:flutter_application_2/screens/theme_provider.dart';
+import 'package:flutter_application_2/screens/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,6 +80,7 @@ class _RegisterState extends State<Register> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
  return Scaffold(
+  backgroundColor:  Color.fromARGB(255, 173, 140, 179),
   
     body: OrientationBuilder(
       builder: (context, orientation) {
@@ -87,7 +90,7 @@ class _RegisterState extends State<Register> {
         }
         // Landscape mode
         else {
-          return buildLandscapeLayout(themeProvider );
+          return buildLandscapeLayout(themeProvider  );
         }
       },
     ),
@@ -119,74 +122,77 @@ Widget buildPortraitLayout(ThemeProvider themeProvider){
                         child: Image.asset('Assets/images/cupcake.png'),
                       ),
                     ),
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(
-            color: Colors.purple,
-            width: 2.0,),),
-                        enabledBorder: OutlineInputBorder(
-                           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.purple, // Set the border color
-            width: 1.0,
-          ),),
-                      
+                    Container(
+                      decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 177, 96, 147),
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                      child: TextFormField(
                         
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
                       ),
-                     
-                      validator: _validateUsername,
+                    
+                       validator: _validateUsername,
+                      ),
                     ),
                     SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        focusedBorder: OutlineInputBorder(
+                    Container(
+                      decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 177, 96, 147),
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                      child: TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),),
                           
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(
-            color: Colors.purple, 
-            width: 1.0,
-          ),
+                        validator: _validateEmail,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    Container(
+                       decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 177, 96, 147),
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                      child: TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
                           
                         ),
-                        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.purple, // Set the border color
-            width: 1.0,
-          ),
-                            ),      ),
-                      validator: _validateEmail,
-                    ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        focusedBorder: OutlineInputBorder(
-                          
-                          borderRadius: BorderRadius.circular(10.0),
-                          
-                          borderSide: BorderSide(
-            color: Colors.purple, 
-            width: 2.0,
-          ),),
-                        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.purple, // Set the border color
-            width: 1.0,
-          ),
-                          
-                        )
+                        obscureText: true,
+                        validator: _validatePassword,
                       ),
-                      obscureText: true,
-                      validator: _validatePassword,
                     ),
                     SizedBox(height: 16.0),
                     Container(
@@ -216,8 +222,12 @@ Widget buildPortraitLayout(ThemeProvider themeProvider){
                             MaterialPageRoute(builder: (context) => Login()),
                           );
                         },
-                        child: Text('Already Have an Account? Login Here'),
-                      ),
+                        child: Text('Already Have an Account? Login Here',
+                        style: TextStyle(
+                          color: Color(0xFF4B1969),
+                          fontSize: 17,
+                        ),
+                      ),)
                     ),
                   ],
                 ),
@@ -230,6 +240,7 @@ Widget buildPortraitLayout(ThemeProvider themeProvider){
   }
 
 Widget buildLandscapeLayout(ThemeProvider themeProvider) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
   return SingleChildScrollView(
     child: Container(
       padding: EdgeInsets.all(16.0),
@@ -359,7 +370,8 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
                 },
                 child: Text('Already Have an Account? Login Here',
                 style: TextStyle(
-                  fontSize: 15,
+                  color: Color(0xFF4B1969),
+                  fontSize: 17,
                 ),
               ),
             ),
