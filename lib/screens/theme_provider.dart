@@ -57,7 +57,7 @@ class ThemeProvider with ChangeNotifier {
   
    ),
   
-
+  hintColor: Color(0xFF4B1969),
     
    
 
@@ -128,7 +128,7 @@ class ThemeProvider with ChangeNotifier {
      
   
    ),
-
+hintColor: Color(0xFF4B1969),
   
   );
 

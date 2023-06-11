@@ -114,9 +114,13 @@ class SettingsState extends State<Settings> {
                           trailing: Switch(
                             value: themeProvider.isDark,
                             onChanged: (value) {
+                            
                               themeProvider.toggleTheme();
+                            
                              
                             },
+                        
+  
                           ),
                         );
                       },

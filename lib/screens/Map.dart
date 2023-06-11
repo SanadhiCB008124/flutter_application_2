@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/Profile.dart';
+import 'package:flutter_application_2/screens/theme_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Settings.dart';
@@ -21,6 +23,8 @@ class _MapState extends State<Map> {
   final LatLng _center = const LatLng(45.521563, -122.677433);
   LatLng _markerPosition = const LatLng(45.521563, -122.677433); // Updated marker position
   final Set<Marker> _markers = {}; // Set to store the markers
+
+  String nickname = ''; // Nickname for the location
 
   @override
   void initState() {
@@ -73,6 +77,8 @@ class _MapState extends State<Map> {
 
   void _addMarker() {
     setState(() {
+      _markers.clear(); // Remove any existing markers
+
       _markers.add(
         Marker(
           markerId: const MarkerId('marker_1'),
@@ -129,18 +135,17 @@ class _MapState extends State<Map> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Profile(savedLocation: savedLocations,cardName: '',), // Pass the saved location to the Profile page
+        builder: (context) => Profile(savedLocation: savedLocations, cardName: nickname,nickname: nickname,),
+        // Pass the saved location and nickname to the Profile page
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildPortraitLayout(ThemeProvider themeProvider) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Choose your Location'),
-        elevation: 2,
-      ),
+      
       body: Stack(
         children: [
           GoogleMap(
@@ -164,6 +169,7 @@ class _MapState extends State<Map> {
                   Text(
                     'Location Details:',
                     style: TextStyle(
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -178,7 +184,21 @@ class _MapState extends State<Map> {
                           children: [
                             Text(
                               'Address: ${snapshot.data}',
-                              style: TextStyle(fontSize: 16.0),
+                              style: const TextStyle(fontSize: 16.0, color: Colors.black),
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              initialValue: nickname, 
+                              onChanged: (value) {
+                                setState(() {
+                                  nickname = value;
+                                  
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                labelText: 'Nickname',
+                                hintText: 'Enter a nickname for the location',
+                              ),
                             ),
                             const SizedBox(height: 16),
                             ElevatedButton(
@@ -201,5 +221,110 @@ class _MapState extends State<Map> {
         ],
       ),
     );
+  }
+
+  Widget buildLandscapeLayout(ThemeProvider themeProvider) {
+    // Build the landscape layout view
+    return Scaffold(
+      body: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            flex: 1,
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: 11.0,
+              ),
+              markers: _markers,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Location Details:',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  FutureBuilder<String>(
+                    future: _getAddressFromLatLng(_markerPosition),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Address: ${snapshot.data}',
+                              style: const TextStyle(fontSize: 16.0, color: Colors.black),
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              onChanged: (value) {
+                                
+                                setState(() {
+                                  nickname = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                labelText: 'Nickname',
+                                hintText: 'Enter a nickname for the location',
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: _submitLocation,
+                              child: const Text('Submit'),
+                            ),
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Text('Failed to get address');
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return Scaffold(
+       appBar: AppBar(
+        title: const Text("Map"),
+      ),
+      backgroundColor:  Color.fromARGB(255, 173, 140, 179),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          // Portrait mode
+          if (orientation == Orientation.portrait) {
+            return buildPortraitLayout(themeProvider);
+          }
+          // Landscape mode
+          else {
+            return buildLandscapeLayout(themeProvider);
+          }
+        },
+      ),
+    );  
   }
 }

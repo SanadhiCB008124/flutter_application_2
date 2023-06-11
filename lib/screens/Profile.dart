@@ -9,9 +9,10 @@ import 'package:flutter_application_2/screens/Map.dart';
 class Profile extends StatefulWidget {
   final String savedLocation;
   final String cardName;
+  final String nickname ;
 
   
- Profile({Key? key,  required this.savedLocation, required this.cardName});
+ Profile({Key? key,  required this.savedLocation, required this.cardName, required this.nickname}) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -114,7 +115,9 @@ class _ProfileState extends State<Profile> {
                 final location = locations[index];
                 return Container(
                   child: Card(
-                  color: const Color.fromARGB(255, 173, 140, 179),
+                  color: Theme.of(context).brightness == Brightness.light
+            ? const Color.fromARGB(255, 173, 140, 179) // Light mode color
+            : Colors.grey, // Dark mode color (grey)
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Stack(
@@ -123,7 +126,7 @@ class _ProfileState extends State<Profile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                location.name,
+                                this.widget.nickname,
                                 style: const TextStyle(
                                   fontSize: 18.0,
                                   color: Colors.black,
@@ -177,7 +180,10 @@ class _ProfileState extends State<Profile> {
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
                 onTap: () {
-                 
+                  Navigator.push(
+                                       context,
+                                       MaterialPageRoute(builder: (context) => Map()),
+                                     );
                 },
                 child:  Text(
                   '+ Add New Location',
@@ -202,22 +208,24 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: cards.length,
-              itemBuilder: (context, index) {
-                final CardItem = cards[index];
-                return Container(
+      
+
+              
+          
+                 Container(
+                               
+            
                   child: Card(
-                    color: const Color.fromARGB(255, 173, 140, 179),
+                   color: Theme.of(context).brightness == Brightness.light
+            ? const Color.fromARGB(255, 173, 140, 179) // Light mode color
+            : Colors.grey, // Dark mode color (grey)
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Stack(
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                cardData.cardName,
@@ -256,9 +264,8 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),  
+            
             Container(
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
@@ -282,24 +289,13 @@ class _ProfileState extends State<Profile> {
 }
 class Location {
   final String name;
-  final String address;
+ 
 
-  Location({required this.name, required this.address});
+  Location({required this.name});
 }
 
 final List<Location> locations = [
-  Location(name: 'Home', address: 'No.26 Niwasa Mawatha, Kandana'),
+  Location(name: 'Home'),
   // Add more locations here
-];
-
-class CardItem {
-  final String name;
-
-  CardItem({required this.name});
-}
-
-final List<CardItem> cards = [
-  CardItem(name: ''),
-  // Add more card items here
 ];
 

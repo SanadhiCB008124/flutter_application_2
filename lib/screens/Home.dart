@@ -72,7 +72,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           } else if (index == 2) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
           } else if (index == 3) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '',cardName: '',)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '',cardName: '',nickname: '',)));
           }
         },
         items: <BottomNavigationBarItem>[
@@ -137,18 +137,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: themeProvider.isDark ? Colors.grey : Colors.purple,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
+            
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 hintText: 'What would you like?',
+                hintStyle: TextStyle(color: Color(0xFF4B1969),
+                fontSize: 15),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
@@ -270,6 +266,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
 
   Widget buildArticleItem(Article item) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -288,7 +285,7 @@ class _CategoryPageState extends State<CategoryPage> {
         height: 136,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
         decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFE0E0E0)),
+          border: Border.all(color:  themeProvider.isDark ? Color.fromARGB(255, 52, 51, 51): Colors.purple,),
           borderRadius: BorderRadius.circular(8.0),
         ),
         padding: const EdgeInsets.all(8),
@@ -329,7 +326,10 @@ class _CategoryPageState extends State<CategoryPage> {
                         },
                         child: Icon(
                           item.isFavorite ? Icons.favorite : Icons.favorite_outline,
-                          color: item.isFavorite ? Colors.red :Colors.black,
+  color: item.isFavorite
+      ? (themeProvider.isDark ? Colors.red : Colors.white)
+      : (themeProvider.isDark ? Colors.white : Colors.black),
+                      
                         ),
                       ),
                     ],
@@ -390,21 +390,21 @@ final List<Article> _articles = [
     price: "900.00",
     imageUrl: "Assets/images/macchiato.jpg",
     category: "Beverages",
-    description: "macchiato ,made with two shots of espresso",
+    description: "Indulge in the perfect balance of velvety smooth espresso and rich, creamy steamed milk in our delightful Macchiato. Watch as the contrasting layers gracefully dance together, creating a masterpiece of flavors.  .",
   ),
    Article(
     title: "Espresso",
     price: "900.00",
-    imageUrl: "Assets/images/espre.jpg",
+    imageUrl: "Assets/images/espresso.jpg",
     category: "Beverages",
-    description: "Espresso is a coffee-brewing method of Italian origin, in which a small amount of nearly boiling water is forced under pressure through finely-ground coffee beans.",
+    description: "Espresso is a  coffee-brewing method of Italian origin made for coffee lovers this enchanting beverage will awaken your senses and leave you craving for more.",
   ),
   Article(
     title: "Iced Milo",
     price: "900.00",
     imageUrl: "Assets/images/iced milo.jpg",
     category: "Beverages",
-    description: "Iced Milo , milo tea ",
+    description: "Escape the summer heat with our heavenly Iced Milo. Immerse yourself in the nostalgic blend of premium Milo powder and ice-cold milk, resulting in a frothy concoction that will transport you to a world of chocolatey bliss. ",
   ),
   Article(
     title: "Iced Americano",
@@ -418,14 +418,14 @@ final List<Article> _articles = [
     price: "900.00",
     imageUrl: "Assets/images/iced mocha.jpg",
     category: "Beverages",
-    description: "Espresso is a coffee-brewing method of Italian origin, in which a small amount of nearly boiling water is forced under pressure through finely-ground coffee beans.",
+    description: "Treat yourself to a symphony of flavors with our Iced Mocha. This enchanting fusion of robust espresso, decadent chocolate, and chilled milk will take you on a journey of pure indulgence. ",
   ),
   Article(
     title: "Strawberry Smoothie",
     price: "900.00",
     imageUrl: "Assets/images/strawberry smoothie.jpg",
     category: "Beverages",
-    description: "Espresso is a coffee-brewing method of Italian origin, in which a small amount of nearly boiling water is forced under pressure through finely-ground coffee beans.",
+    description: "Immerse yourself in the vibrant embrace of our Strawberry Smoothie. Bursting with the juiciest strawberries and blended to perfection, this luscious concoction is a fruity delight.",
   ),
   
 
@@ -455,21 +455,21 @@ final List<Article> _articles = [
     price: "900.00",
     imageUrl: "Assets/images/potato cheese.jpg",
     category: "Food",
-    description: "crispy potatoes and gooey cheese"
+    description:"crispy potatoes and gooey cheese in a toasted sandwich"
   ),
   Article(
     title: "Chocolate Fudge",
     price: "900.00",
     imageUrl: "Assets/images/fudge.jpg",
     category: "Cakes",
-    description: "delicious hazelnut fudge"
+    description: "Embark on a journey to chocolate heaven with our delectable fudge. Each bite of this rich and velvety treat is an explosion of cocoa goodness that will transport you to a state of pure bliss. "
   ),
   Article(
     title: "Red Velvet",
     price: "900.00",
     imageUrl: "Assets/images/red velvet.webp",
     category: "Cakes",
-    description: "delicious red velvet cake with cream cheese frosting"
+    description: "Dive into a world of decadence with our Red Velvet Cake. This indulgent masterpiece captivates the eyes and seduces the taste buds with its deep crimson hue and velvety texture. Every bite is a symphony of flavors, as the moist layers of cocoa-infused cake are complemented by a luxurious cream cheese frosting. Allow yourself to be swept away by the harmonious balance of sweet and tangy notes, leaving you craving for one more heavenly slice."
   ),
   Article(
     title: "Blueberry Cheesecake",

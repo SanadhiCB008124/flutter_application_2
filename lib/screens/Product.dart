@@ -224,12 +224,15 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
                       Padding(padding: EdgeInsets.all(7.0)),
                        Text(
                         widget.title,
+
                         style: TextStyle(
                          fontSize: 30.0,
               fontWeight: FontWeight.bold,
                          
                         ),
+                        
                       ),
+                     
                       SizedBox(height: 16),
                       Text(
                         widget.description,
