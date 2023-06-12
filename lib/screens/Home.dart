@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/screens/Product.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'theme_provider.dart';
+import 'package:flutter_application_2/screens/Product.dart';
 import 'package:flutter_application_2/screens/Cart.dart';
 import 'package:flutter_application_2/screens/Favorites.dart';
 import 'package:flutter_application_2/screens/Profile.dart';
@@ -19,11 +20,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   TextEditingController _searchController = TextEditingController();
   int _selectedIndex = 0;
+  List<Article> articles = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: items.length, vsync: this);
+    loadArticles();
+  }
+
+  Future<void> loadArticles() async {
+    String jsonString = await rootBundle.loadString('Assets/articles.json');
+    List<dynamic> jsonList = json.decode(jsonString);
+    setState(() {
+      articles = jsonList.map((item) => Article.fromJson(item)).toList();
+    });
   }
 
   @override
@@ -56,61 +67,65 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+        backgroundColor:
+            themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
-       
         unselectedItemColor: Theme.of(context).brightness == Brightness.dark
-      ? Colors.grey
-      : Color.fromARGB(255, 153, 116, 159),  
+            ? Colors.grey
+            : Color.fromARGB(255, 153, 116, 159),
         onTap: (int index) {
           setState(() {
             _selectedIndex = index;
           });
           if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Home()));
           } else if (index == 1) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Favorites()));
           } else if (index == 2) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Cart()));
           } else if (index == 3) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '',nickname: '',)));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Profile()));
           }
         },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(Icons.home,
-            size: 28,
-           
+            backgroundColor:
+                themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.home,
+              size: 28,
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            
-            icon: Icon(Icons.favorite,
-            
-            
-            size: 28,
-           
-             ),
+            backgroundColor:
+                themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.favorite,
+              size: 28,
+            ),
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            
-            icon: Icon(Icons.shopping_cart,
-            size: 28,
+            backgroundColor:
+                themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.shopping_cart,
+              size: 28,
             ),
             label: 'Cart',
           ),
           BottomNavigationBarItem(
-            backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(Icons.person,
-            size: 28,
-            
-           
+            backgroundColor:
+                themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.person,
+              size: 28,
             ),
             label: 'Profile',
           ),
@@ -139,18 +154,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.all(8),
-            
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 hintText: 'What would you like?',
-                 hintStyle: Theme.of(context).brightness == Brightness.dark
-          ? TextStyle(color: Colors.grey)
-          : TextStyle(color: Color(0xFF4B1969),
-          fontSize: 17),
-    
-                
+                hintStyle: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey
+                      : Color(0xFF4B1969),
+                  fontSize: 17,
+                ),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
@@ -179,7 +193,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: items.map((category) => CategoryPage(category: category)).toList(),
+              children: items
+                  .map((category) => CategoryPage(category: category, articles: articles))
+                  .toList(),
             ),
           ),
         ],
@@ -191,7 +207,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Center(
       child: Row(
         children: [
-          
           const SizedBox(width: 10),
           Expanded(
             flex: 5,
@@ -227,7 +242,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 Expanded(
                   child: TabBarView(
                     controller: _tabController,
-                    children: items.map((category) => CategoryPage(category: category)).toList(),
+                    children: items
+                        .map((category) => CategoryPage(category: category, articles: articles))
+                        .toList(),
                   ),
                 ),
               ],
@@ -241,8 +258,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
 class CategoryPage extends StatefulWidget {
   final String category;
+  final List<Article> articles;
 
-  const CategoryPage({Key? key, required this.category}) : super(key: key);
+  const CategoryPage({Key? key, required this.category, required this.articles}) : super(key: key);
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
@@ -254,7 +272,9 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   void initState() {
     super.initState();
-    filteredArticles = _articles.where((article) => article.category == widget.category).toList();
+    filteredArticles = widget.articles
+        .where((article) => article.category == widget.category)
+        .toList();
   }
 
   @override
@@ -267,9 +287,6 @@ class _CategoryPageState extends State<CategoryPage> {
       },
     );
   }
-
-
-
 
   Widget buildArticleItem(Article item) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -291,7 +308,9 @@ class _CategoryPageState extends State<CategoryPage> {
         height: 136,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
         decoration: BoxDecoration(
-          border: Border.all(color:  themeProvider.isDark ? Color.fromARGB(255, 52, 51, 51): Colors.purple,),
+          border: Border.all(
+            color: themeProvider.isDark ? Color.fromARGB(255, 52, 51, 51) : Colors.purple,
+          ),
           borderRadius: BorderRadius.circular(8.0),
         ),
         padding: const EdgeInsets.all(8),
@@ -332,10 +351,9 @@ class _CategoryPageState extends State<CategoryPage> {
                         },
                         child: Icon(
                           item.isFavorite ? Icons.favorite : Icons.favorite_outline,
-  color: item.isFavorite
-      ? (themeProvider.isDark ? Colors.red : Colors.red)
-      : (themeProvider.isDark ? Colors.white : Colors.black),
-                      
+                          color: item.isFavorite
+                              ? (themeProvider.isDark ? Colors.red : Colors.red)
+                              : (themeProvider.isDark ? Colors.white : Colors.black),
                         ),
                       ),
                     ],
@@ -356,8 +374,6 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 }
 
-
-
 class Article {
   final String title;
   final String price;
@@ -374,123 +390,14 @@ class Article {
     required this.description,
     this.isFavorite = false,
   });
+
+  factory Article.fromJson(Map<String, dynamic> json) {
+    return Article(
+      title: json['title'],
+      price: json['price'],
+      imageUrl: json['imageUrl'],
+      category: json['category'],
+      description: json['description'],
+    );
+  }
 }
-
-final List<Article> _articles = [
-  Article(
-    title: "Caffe Latte",
-    price: "900.00",
-    imageUrl: "Assets/images/caffe latte.jpg",
-    category: "Beverages",
-    description: "A latte is a coffee drink made with espresso and steamed milk. The term as used in English is a shortened form of the Italian caffè latte, caffelatte or caffellatte, which means 'milk coffee'.",
-  ),
-  Article(
-    title: "Cappucino",
-    price: "900.00",
-    imageUrl: "Assets/images/capuccino.jpg",
-    category: "Beverages",
-    description: "Capuccino is an espresso-based coffee drink that originated in Italy, and is traditionally prepared with steamed milk foam.",
-  ),
-   Article(
-    title: "Macchiato",
-    price: "900.00",
-    imageUrl: "Assets/images/macchiato.jpg",
-    category: "Beverages",
-    description: "Indulge in the perfect balance of velvety smooth espresso and rich, creamy steamed milk in our delightful Macchiato. Watch as the contrasting layers gracefully dance together, creating a masterpiece of flavors.  .",
-  ),
-   Article(
-    title: "Espresso",
-    price: "900.00",
-    imageUrl: "Assets/images/espresso.jpg",
-    category: "Beverages",
-    description: "Espresso is a  coffee-brewing method of Italian origin made for coffee lovers this enchanting beverage will awaken your senses and leave you craving for more.",
-  ),
-  Article(
-    title: "Iced Milo",
-    price: "900.00",
-    imageUrl: "Assets/images/iced milo.jpg",
-    category: "Beverages",
-    description: "Escape the summer heat with our heavenly Iced Milo. Immerse yourself in the nostalgic blend of premium Milo powder and ice-cold milk, resulting in a frothy concoction that will transport you to a world of chocolatey bliss. ",
-  ),
-  Article(
-    title: "Iced Americano",
-    price: "900.00",
-    imageUrl: "Assets/images/iced americano.webp",
-    category: "Beverages",
-    description: "shots of espresso cooled with iced cubes.heaven on a warm day.",
-  ),
-   Article(
-    title: "Iced Mocha",
-    price: "900.00",
-    imageUrl: "Assets/images/iced mocha.jpg",
-    category: "Beverages",
-    description: "Treat yourself to a symphony of flavors with our Iced Mocha. This enchanting fusion of robust espresso, decadent chocolate, and chilled milk will take you on a journey of pure indulgence. ",
-  ),
-  Article(
-    title: "Strawberry Smoothie",
-    price: "900.00",
-    imageUrl: "Assets/images/strawberry smoothie.jpg",
-    category: "Beverages",
-    description: "Immerse yourself in the vibrant embrace of our Strawberry Smoothie. Bursting with the juiciest strawberries and blended to perfection, this luscious concoction is a fruity delight.",
-  ),
-  
-
-  Article(
-    title: "Bacon & Egg Sandwich",
-    price: "900.00",
-    imageUrl: "Assets/images/bacon and egg.jpg",
-    category: "Food",
-    description: "delicious bacon sandwich with a fried egg and a dash of tomato sauce",
-  ),
-  Article(
-    title: "Chicken Sandwich",
-    price: "900.00",
-    imageUrl: "Assets/images/chicken sandwich.jpg",
-    category: "Food",
-    description: "crispy chicken lased with spicy bbq sauce"
-  ),
-  Article(
-    title: "Croissant",
-    price: "900.00",
-    imageUrl: "Assets/images/croissant.jpg",
-    category: "Food",
-    description: "a cripsy outside and soft warm inside"
-  ),
-  Article(
-    title: "Potato Cheese",
-    price: "900.00",
-    imageUrl: "Assets/images/potato cheese.jpg",
-    category: "Food",
-    description:"crispy potatoes and gooey cheese in a toasted sandwich"
-  ),
-  Article(
-    title: "Chocolate Fudge",
-    price: "900.00",
-    imageUrl: "Assets/images/fudge.jpg",
-    category: "Cakes",
-    description: "Embark on a journey to chocolate heaven with our delectable fudge. Each bite of this rich and velvety treat is an explosion of cocoa goodness that will transport you to a state of pure bliss. "
-  ),
-  Article(
-    title: "Red Velvet",
-    price: "900.00",
-    imageUrl: "Assets/images/red velvet.webp",
-    category: "Cakes",
-    description: "Dive into a world of decadence with our Red Velvet Cake. This indulgent masterpiece captivates the eyes and seduces the taste buds with its deep crimson hue and velvety texture. Every bite is a symphony of flavors, as the moist layers of cocoa-infused cake are complemented by a luxurious cream cheese frosting. Allow yourself to be swept away by the harmonious balance of sweet and tangy notes, leaving you craving for one more heavenly slice."
-  ),
-  Article(
-    title: "Blueberry Cheesecake",
-    price: "900.00",
-    imageUrl: "Assets/images/lemon blueberry cheesecake.webp",
-    category: "Cakes",
-    description: "delicious blueberry cheesecake with a lemon twist"
-  ),
-  Article(
-    title: "Chocolate Cake",
-    price: "900.00",
-    imageUrl: "Assets/images/chocolate cake with chocolate ganache.jpg",
-    category: "Cakes",
-    description: "delicious chocolate cake with chocolate ganache"
-  ),
-];
-
-

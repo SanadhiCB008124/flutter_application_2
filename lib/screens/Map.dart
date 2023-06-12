@@ -150,9 +150,7 @@ class _MapState extends State<Map> {
         context,
         MaterialPageRoute(
           builder: (context) => Profile(
-            savedLocation: savedLocations,
-          
-            nickname: nickname,
+            
           ),
           // Pass the saved location and nickname to the Profile page
         ),

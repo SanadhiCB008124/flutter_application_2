@@ -11,14 +11,12 @@ import 'package:flutter_application_2/screens/Settings.dart';
 import 'package:flutter_application_2/screens/Map.dart';
 
 class Profile extends StatefulWidget {
-  final String savedLocation;
-  final String nickname;
+
   
 
   Profile({
     Key? key,
-    required this.savedLocation,
-    required this.nickname,
+   
   }) : super(key: key);
 
   @override
@@ -31,12 +29,16 @@ class _ProfileState extends State<Profile> {
   List<CardDetailsClass> cardList = [];
   CardDetailsClass? cardDetailsvar;
 
+ List<MapDetailsClass> mapList = [];
+ MapDetailsClass? mapDetailsvar;
+
 
   @override
   void initState() {
     super.initState();
     _getUser();
     fetchCardDetails();
+     fetchMapDetails(); 
   }
 
   Future<void> _getUser() async {
@@ -71,6 +73,34 @@ void fetchCardDetails() async {
     });
   });
 }
+void fetchMapDetails() async {
+    FirebaseFirestore.instance.collection('MapDetails').get().then((value) {
+      value.docs.forEach((result) {
+        setState(() {
+          mapList.add(MapDetailsClass(
+     
+            nickname: result.data()['nickname'] ?? '',
+            address: result.data()['address'] ?? '',
+          ));
+        });
+      });
+
+      // Print the values
+      mapList.forEach((mapDetails) {
+        
+        print('Nickname: ${mapDetails.nickname}');
+        print('Address: ${mapDetails.address}');
+        print('------');
+      });
+    });
+  }
+
+
+
+
+
+
+
 
 
   @override
@@ -111,7 +141,7 @@ void fetchCardDetails() async {
           } else if (index == 2) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
           } else if (index == 3) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '', nickname: '')));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
           }
         },
         items: <BottomNavigationBarItem>[
@@ -176,9 +206,13 @@ void fetchCardDetails() async {
             const SizedBox(height: 16.0),
             Container(
               child: TextFormField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   suffixIcon: Icon(Icons.edit),
                   labelText: 'Username',
+                  labelStyle: TextStyle(
+                    color: themeProvider.themeData.textTheme.bodyMedium?.color,
+                  ),
+                  
                   border: OutlineInputBorder(borderRadius: BorderRadius.zero),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16.0,
@@ -217,21 +251,22 @@ void fetchCardDetails() async {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                
-                                widget.nickname,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
+                                //location name
+                                 mapList.isNotEmpty ? mapList[0].nickname: '',
+                                style:  TextStyle(
+                                  fontSize: 20.0,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 8.0),
+                              SizedBox(height: 6.0),
                               Padding(padding: EdgeInsets.all(10.0)),
                               Text(
                                 //addreess
-                                this.widget.savedLocation,
-                                style: const TextStyle(
-                                  fontSize: 19.0,
+                                  mapList.isNotEmpty ? mapList[0].address: '',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -309,25 +344,28 @@ void fetchCardDetails() async {
                   child: Stack(
                     children: [
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
                             //cardname
                             cardList.isNotEmpty ? cardList[0].cardName : '',
                             style: TextStyle(
-                              fontSize: 18.0,
+                            
+                              fontSize: 20.0,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                            SizedBox(height: 6.0),
+                              Padding(padding: EdgeInsets.all(10.0)),
                           Text(
-                            //cardname
+                            //cardnumbe
                             cardList.isNotEmpty ? cardList[0].cardNumber : '',
                             style: TextStyle(
                               fontSize: 18.0,
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                           
                             ),
                           ),
                         ],
@@ -399,5 +437,16 @@ class CardDetailsClass {
     required this.cardExpirymonth,
     required this.cardExpiryyear,
     required this.cardCVV,
+  });
+}
+class MapDetailsClass {
+ 
+  final String nickname;
+  final String address;
+
+  MapDetailsClass({
+   
+    required this.nickname,
+    required this.address,
   });
 }

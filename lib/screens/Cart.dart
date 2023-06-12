@@ -71,7 +71,7 @@ class _CartState extends State<Cart> {
           } else if (index == 2) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
           } else if (index == 3) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '', nickname: '')));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
           }
         },
         items: <BottomNavigationBarItem>[
