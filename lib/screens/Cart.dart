@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'Favorites.dart';
+import 'Home.dart';
+import 'Profile.dart';
 import 'theme_provider.dart';
 
 class Cart extends StatefulWidget {
@@ -11,6 +14,7 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   int value = 1;
+  int _selectedIndex = 2; // Add this line to define and initialize _selectedIndex
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,6 @@ class _CartState extends State<Cart> {
           ),
           Container(
             margin: const EdgeInsets.all(10),
-            
             width: 300,
             child: ElevatedButton(
               onPressed: () {},
@@ -49,6 +52,63 @@ class _CartState extends State<Cart> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+      unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+      ? Colors.grey
+      : Color.fromARGB(255, 153, 116, 159),     
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+          } else if (index == 1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites()));
+          } else if (index == 2) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+          } else if (index == 3) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '', nickname: '')));
+          }
+        },
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.home,
+              size: 28,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.favorite,
+              size: 28,
+            ),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.shopping_cart,
+              size: 28,
+            ),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.person,
+              size: 28,
+            ),
+            label: 'Profile',
+          ),
+        ],
+        selectedLabelStyle: TextStyle(fontSize: 0),
       ),
     );
   }
@@ -81,35 +141,31 @@ class _CartState extends State<Cart> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Container(
-                  margin: EdgeInsets.only(top:10),
-                      child: Text(
-                        item.title,
-                        style: const TextStyle(fontSize: 20),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: Icon(Icons.delete,
-                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
-                    ),
-                      margin: EdgeInsets.only(left: 200.0)
-                      ),
-
-                    Container(
-               child: Text(
-                  item.price,
-                 
-                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                   
-                  
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Text(
+                    item.title,
+                    style: const TextStyle(fontSize: 20),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                    ),
-               
+                Container(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                    Icons.delete,
+                    color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
+                  ),
+                  margin: EdgeInsets.only(left: 200.0),
+                ),
+                Container(
+                  child: Text(
+                    item.price,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -156,7 +212,6 @@ class _CartState extends State<Cart> {
                     ),
                   ],
                 ),
-               
               ],
             ),
           ),
@@ -184,7 +239,7 @@ final List<Article> _articles = [
   Article(
     title: "Macchiato",
     price: "900.00",
-    imageUrl: "Assets/images/macchiato.jpg",
+    imageUrl: "Assets/images/macchiato.jpg", // Update the image paths to use lowercase 'assets'
     category: "Beverages",
   ),
   Article(

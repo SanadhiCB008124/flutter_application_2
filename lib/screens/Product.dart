@@ -55,135 +55,142 @@ Widget buildPortraitLayout(ThemeProvider themeProvider) {
     appBar: AppBar(
       title: Text('Product'),),
   
-  body :Column(
-    children: [
-      Container(
-        margin: EdgeInsets.all(10.0),
-        width: MediaQuery.of(context).size.width,
-        height: 300,
-        child: Image.asset(widget.image, fit: BoxFit.cover),
-      ),
-      Container(
-        alignment: Alignment.centerLeft,
-        margin: EdgeInsets.all(8.0),
-        child: Text(
-          widget.title,
-          style: TextStyle(
-            color: themeProvider.themeData.textTheme.bodyLarge?.color,
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-          ),
+  body :SingleChildScrollView(
+    child: Column(
+      children: [
+        Container(
+          margin: EdgeInsets.all(10.0),
+          width: MediaQuery.of(context).size.width,
+          
+          child: Image.asset(widget.image, fit: BoxFit.cover),
         ),
-      ),
-      SizedBox(height: 5.0),
-      
-      Container(
-        margin: EdgeInsets.all(10.0),
-        child: Text(
-          widget.description,
-          style: TextStyle(
-            fontSize: 18.0,
-            color: themeProvider.themeData.textTheme.bodyMedium?.color,
-          ),
-        ),
-      ),
-      Row(
-        children: [
-          SizedBox(width: 10.0),
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star, color: Colors.yellow),
-          Icon(Icons.star_border, color: Colors.yellow),
-          SizedBox(width: 10.0),
-          Text('Reviews'),
-        ],
-      ),
-      Container(
-        alignment: Alignment.bottomRight,
-        margin: EdgeInsets.only(right: 22.0),
-        child: Text(
-          widget.price,
-          style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-        ),
-      ),
-      Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                value++;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 22.0),
-              child: Icon(
-                Icons.add_box_rounded,
-                size: 30.0,
-                color: themeProvider.isDark ? Colors.grey : Colors.black,
-              ),
+        Container(
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.all(8.0),
+          child: Text(
+            widget.title,
+            style: TextStyle(
+              color: themeProvider.themeData.textTheme.bodyLarge?.color,
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(width: 10.0),
-          Container(
-            child: Text(
-              value.toString(),
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 5.0),
+        
+        Container(
+          margin: EdgeInsets.all(10.0),
+          child: Text(
+            widget.description,
+            style: TextStyle(
+              fontSize: 18.0,
+              color: themeProvider.themeData.textTheme.bodyMedium?.color,
             ),
           ),
-          SizedBox(width: 10.0),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                if (value > 1) {
-                  value--;
-                }
-              });
-            },
-            child: Container(
-              child: Icon(
-                Icons.remove_circle_rounded,
-                size: 30.0,
-                color: themeProvider.isDark ? Colors.grey : Colors.black,
-              ),
-            ),
+        ),
+        Row(
+          children: [
+            SizedBox(width: 10.0),
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star, color: Colors.yellow),
+            Icon(Icons.star_border, color: Colors.yellow),
+            SizedBox(width: 10.0),
+            Text('Reviews'),
+          ],
+        ),
+        Container(
+          alignment: Alignment.bottomRight,
+          margin: EdgeInsets.only(right: 22.0),
+          child: Text(
+            widget.price,
+            style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      SizedBox(height: 30.0),
- 
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-            onPressed: () {},
-            child: Text('Add to Cart'),
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
+        ),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  value++;
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 22.0),
+                child: Icon(
+                  Icons.add_box_rounded,
+                  size: 30.0,
+                  color: themeProvider.isDark ? Colors.grey : Colors.black,
                 ),
               ),
-              backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
-              minimumSize: MaterialStateProperty.all(Size(150, 60)),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: Text('Buy Now'),
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
+            SizedBox(width: 10.0),
+            Container(
+              child: Text(
+                value.toString(),
+                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(width: 10.0),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (value > 1) {
+                    value--;
+                  }
+                });
+              },
+              child: Container(
+                child: Icon(
+                  Icons.remove_circle_rounded,
+                  size: 30.0,
+                  color: themeProvider.isDark ? Colors.grey : Colors.black,
                 ),
               ),
-              backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
-              minimumSize: MaterialStateProperty.all(Size(150, 60)),
             ),
+          ],
+        ),
+        SizedBox(height: 30.0),
+   
+        Container(
+          margin: EdgeInsets.only(bottom: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+            
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Add to Cart'),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                  ),
+                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+                  minimumSize: MaterialStateProperty.all(Size(150, 60)),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text('Buy Now'),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                  ),
+                  backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
+                  minimumSize: MaterialStateProperty.all(Size(150, 60)),
+                ),
+              ),
+             
+            ],
           ),
-        ],
-      ),
-    ],
+        ),
+      ],
+    ),
   ));
 }
 
@@ -199,7 +206,7 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
         
         Container(
              width: 300,
-             height: 330,
+            
           child: Expanded(
          
           flex: 1,

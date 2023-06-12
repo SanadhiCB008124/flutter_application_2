@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'Cart.dart';
+import 'Favorites.dart';
+import 'Home.dart';
 import 'theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/CardDetails.dart';
@@ -8,26 +12,31 @@ import 'package:flutter_application_2/screens/Map.dart';
 
 class Profile extends StatefulWidget {
   final String savedLocation;
-  final String cardName;
-  final String nickname ;
-
+  final String nickname;
   
- Profile({Key? key,  required this.savedLocation, required this.cardName, required this.nickname}) : super(key: key);
+
+  Profile({
+    Key? key,
+    required this.savedLocation,
+    required this.nickname,
+  }) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  
   late User? _user;
-  
-  // User object to store the currently signed-in user
+  int _selectedIndex = 3;
+  List<CardDetailsClass> cardList = [];
+  CardDetailsClass? cardDetailsvar;
+
 
   @override
   void initState() {
     super.initState();
-    _getUser(); // Call a method to retrieve the currently signed-in user
+    _getUser();
+    fetchCardDetails();
   }
 
   Future<void> _getUser() async {
@@ -37,9 +46,36 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+void fetchCardDetails() async {
+  FirebaseFirestore.instance.collection('CardDetails').get().then((value) {
+    value.docs.forEach((result) {
+      setState(() {
+        cardList.add(CardDetailsClass(
+          cardName: result.data()['cardName'] ?? '',
+          cardNumber: result.data()['cardNumber'] ?? '',
+          cardExpirymonth: result.data()['cardExpirymonth'] ?? '',
+          cardExpiryyear: result.data()['cardExpiryyear'] ?? '',
+          cardCVV: result.data()['cardCVV'] ?? '',
+        ));
+      });
+    });
+
+    // Print the values
+    cardList.forEach((cardDetails) {
+      print('Card Name: ${cardDetails.cardName}');
+      print('Card Number: ${cardDetails.cardNumber}');
+      print('Card Expiry Month: ${cardDetails.cardExpirymonth}');
+      print('Card Expiry Year: ${cardDetails.cardExpiryyear}');
+      print('Card CVV: ${cardDetails.cardCVV}');
+      print('------');
+    });
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
-     final cardData = Provider.of<CardData>(context);
+    
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
@@ -51,11 +87,68 @@ class _ProfileState extends State<Profile> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Settings()),
+                MaterialPageRoute(builder: (context) => const AppSettings()),
               );
             },
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+      ? Colors.grey
+      : Color.fromARGB(255, 153, 116, 159),      
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+          } else if (index == 1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites()));
+          } else if (index == 2) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+          } else if (index == 3) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '', nickname: '')));
+          }
+        },
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.home,
+              size: 28,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.favorite,
+              size: 28,
+            ),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.shopping_cart,
+              size: 28,
+            ),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.person,
+              size: 28,
+            ),
+            label: 'Profile',
+          ),
+        ],
+        selectedLabelStyle: TextStyle(fontSize: 0),
       ),
       body: Center(
         child: ListView(
@@ -64,21 +157,22 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               width: 100,
               height: 150,
-              child:Icon(Icons.person_2_outlined,size: 100.0,)
-              
-              
+              child: Icon(
+                Icons.person_2_outlined,
+                size: 100.0,
+              ),
             ),
             const SizedBox(height: 16.0),
             Container(
-              child: Text('Hi! ${_user?.email ?? ''}' 
-              ,style: TextStyle(
-                fontSize: 20.0,
-                color: Color.fromARGB(255, 173, 66, 192),
-                fontWeight: FontWeight.bold,
-              )
+              child: Text(
+                'Hi! ${_user?.email ?? ''}',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Color.fromARGB(255, 173, 66, 192),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              
-              ), // Display the user's email
+            ),
             const SizedBox(height: 16.0),
             Container(
               child: TextFormField(
@@ -94,7 +188,6 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             const SizedBox(height: 16.0),
-          
             Container(
               padding: const EdgeInsets.all(16.0),
               child: Text(
@@ -107,17 +200,15 @@ class _ProfileState extends State<Profile> {
               ),
             ),
             ListView.builder(
-              
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: locations.length,
-              itemBuilder: (context, index) {
-                final location = locations[index];
+              itemCount: 1,
+              itemBuilder: (context, _) {
                 return Container(
                   child: Card(
-                  color: Theme.of(context).brightness == Brightness.light
-            ? const Color.fromARGB(255, 173, 140, 179) // Light mode color
-            : Colors.grey, // Dark mode color (grey)
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? const Color.fromARGB(255, 173, 140, 179)
+                        : Colors.grey,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Stack(
@@ -126,7 +217,8 @@ class _ProfileState extends State<Profile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                this.widget.nickname,
+                                
+                                widget.nickname,
                                 style: const TextStyle(
                                   fontSize: 18.0,
                                   color: Colors.black,
@@ -134,34 +226,34 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                               SizedBox(height: 8.0),
-                                Padding(padding: EdgeInsets.all(10.0)),
+                              Padding(padding: EdgeInsets.all(10.0)),
                               Text(
-                              
-                               this.widget.savedLocation,
-
+                                //addreess
+                                this.widget.savedLocation,
                                 style: const TextStyle(
                                   fontSize: 19.0,
                                 ),
                               ),
                             ],
                           ),
-                       
                           Align(
                             alignment: Alignment.topRight,
                             child: Padding(
-                              padding:  EdgeInsets.all(10.0),
+                              padding: EdgeInsets.all(10.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                 
                                   IconButton(
-                                    icon: const Icon(Icons.edit,
-                                    color: Colors.black,),
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.black,
+                                    ),
                                     onPressed: () {
                                       Navigator.push(
-                                       context,
-                                       MaterialPageRoute(builder: (context) => Map()),
-                                     );
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Map()),
+                                      );
                                     },
                                   ),
                                 ],
@@ -175,26 +267,25 @@ class _ProfileState extends State<Profile> {
                 );
               },
             ),
-        
             Container(
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
-                                       context,
-                                       MaterialPageRoute(builder: (context) => Map()),
-                                     );
+                    context,
+                    MaterialPageRoute(builder: (context) => Map()),
+                  );
                 },
-                child:  Text(
+                child: Text(
                   '+ Add New Location',
                   style: TextStyle(
-                   color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Color.fromRGBO(75, 25, 105, 1),
-
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey
+                        : Color.fromRGBO(75, 25, 105, 1),
                     fontSize: 19.0,
                   ),
                 ),
               ),
-              
             ),
             SizedBox(height: 16.0),
             Container(
@@ -208,75 +299,80 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-      
-
-              
-          
-                 Container(
-                               
-            
-                  child: Card(
-                   color: Theme.of(context).brightness == Brightness.light
-            ? const Color.fromARGB(255, 173, 140, 179) // Light mode color
-            : Colors.grey, // Dark mode color (grey)
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Stack(
+            Container(
+              child: Card(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? const Color.fromARGB(255, 173, 140, 179)
+                    : Colors.grey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                               cardData.cardName,
-                                style:TextStyle(
-
-                                  fontSize: 18.0,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              ],
+                          Text(
+                            //cardname
+                            cardList.isNotEmpty ? cardList[0].cardName : '',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit,
-                                    color: Colors.black,),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => CardDetails()),
-                                      );
-                                    
-                                    },
-                                  ),
-                                ],
-                              ),
+                          Text(
+                            //cardname
+                            cardList.isNotEmpty ? cardList[0].cardNumber : '',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CardDetails()),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),  
-            
+                ),
+              ),
+            ),
             Container(
               padding: const EdgeInsets.all(6),
               child: GestureDetector(
                 onTap: () {
                   
                 },
-                child:  Text(
-                  '+Add New Card',
+                child: Text(
+                  '+ Add New Card',
                   style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Color.fromRGBO(75, 25, 105, 1),
-                    
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey
+                        : Color.fromRGBO(75, 25, 105, 1),
                     fontSize: 19.0,
                   ),
                 ),
@@ -284,18 +380,24 @@ class _ProfileState extends State<Profile> {
             ),
           ],
         ),
-     ));
+      ),
+    );
   }
 }
-class Location {
-  final String name;
- 
 
-  Location({required this.name});
+
+class CardDetailsClass {
+  final String cardName;
+  final String cardNumber;
+  final String cardExpirymonth;
+  final String cardExpiryyear;
+  final String cardCVV;
+
+  CardDetailsClass({
+    required this.cardName,
+    required this.cardNumber,
+    required this.cardExpirymonth,
+    required this.cardExpiryyear,
+    required this.cardCVV,
+  });
 }
-
-final List<Location> locations = [
-  Location(name: 'Home'),
-  // Add more locations here
-];
-

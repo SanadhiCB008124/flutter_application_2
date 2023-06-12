@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/screens/Profile.dart';
 import 'package:flutter_application_2/screens/theme_provider.dart';
@@ -132,20 +134,33 @@ class _MapState extends State<Map> {
 
     String savedLocations = await _getAddressFromLatLng(_markerPosition);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Profile(savedLocation: savedLocations, cardName: nickname,nickname: nickname,),
-        // Pass the saved location and nickname to the Profile page
-      ),
-    );
+    // Get the current authenticated user
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Store location details and nickname in Firebase collection
+      await FirebaseFirestore.instance.collection('MapDetails').doc(user.uid).set({
+        'latitude': _markerPosition.latitude,
+        'longitude': _markerPosition.longitude,
+        'address': savedLocations,
+        'nickname': nickname,
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Profile(
+            savedLocation: savedLocations,
+          
+            nickname: nickname,
+          ),
+          // Pass the saved location and nickname to the Profile page
+        ),
+      );
+    }
   }
-
   Widget buildPortraitLayout(ThemeProvider themeProvider) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
     return Scaffold(
-      
       body: Stack(
         children: [
           GoogleMap(
@@ -184,19 +199,20 @@ class _MapState extends State<Map> {
                           children: [
                             Text(
                               'Address: ${snapshot.data}',
+                          
                               style: const TextStyle(fontSize: 16.0, color: Colors.black),
                             ),
                             const SizedBox(height: 16),
                             TextFormField(
-                              initialValue: nickname, 
+                              initialValue: nickname,
                               onChanged: (value) {
                                 setState(() {
                                   nickname = value;
-                                  
                                 });
                               },
                               decoration: const InputDecoration(
                                 labelText: 'Nickname',
+                          
                                 hintText: 'Enter a nickname for the location',
                               ),
                             ),
@@ -224,10 +240,9 @@ class _MapState extends State<Map> {
   }
 
   Widget buildLandscapeLayout(ThemeProvider themeProvider) {
-    // Build the landscape layout view
     return Scaffold(
       body: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
             flex: 1,
@@ -237,14 +252,14 @@ class _MapState extends State<Map> {
                 target: _center,
                 zoom: 11.0,
               ),
-              markers: _markers,
+              markers: _markers, // Set the markers on the map
             ),
           ),
           Expanded(
             flex: 1,
             child: Container(
+              padding: const EdgeInsets.all(16.0),
               color: Colors.white,
-              padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -270,8 +285,8 @@ class _MapState extends State<Map> {
                             ),
                             const SizedBox(height: 16),
                             TextFormField(
+                              initialValue: nickname,
                               onChanged: (value) {
-                                
                                 setState(() {
                                   nickname = value;
                                 });
@@ -307,24 +322,14 @@ class _MapState extends State<Map> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-
-    return Scaffold(
-       appBar: AppBar(
-        title: const Text("Map"),
-      ),
-      backgroundColor:  Color.fromARGB(255, 173, 140, 179),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          // Portrait mode
-          if (orientation == Orientation.portrait) {
-            return buildPortraitLayout(themeProvider);
-          }
-          // Landscape mode
-          else {
-            return buildLandscapeLayout(themeProvider);
-          }
-        },
-      ),
-    );  
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return orientation == Orientation.portrait
+            ? buildPortraitLayout(themeProvider)
+            : buildLandscapeLayout(themeProvider);
+      },
+    );
   }
 }
+
+

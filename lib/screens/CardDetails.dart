@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/screens/Profile.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardDetails extends StatelessWidget {
@@ -60,15 +64,64 @@ class _CardFormState extends State<CardForm> {
   }
 
   Future<void> _saveFormData() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('cardNumber', _cardNumberController.text);
-    prefs.setString('cardName', _cardNameController.text);
-    prefs.setString('expirationMonth', _selectedMonth ?? '');
-    prefs.setString('expirationYear', _selectedYear ?? '');
-    prefs.setString('cvv', _cvvController.text);
-    final cardName = _cardNameController.text;
-    Provider.of<CardData>(context, listen: false).setCardName(cardName);
+  // ...
+
+  // Store card details in Firestore
+  final firestore = FirebaseFirestore.instance;
+  final userId = FirebaseAuth.instance.currentUser?.uid; // Replace with your user ID retrieval logic
+  if (userId != null) {
+    await firestore.collection('cardDetails').doc(userId).set({
+      'cardNumber': _cardNumberController.text,
+      'cardName': _cardNameController.text,
+      'expirationMonth': _selectedMonth ?? '',
+      'expirationYear': _selectedYear ?? '',
+      'cvv': _cvvController.text,
+    });
   }
+
+  // ...
+}
+
+ void saveCardDetails() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String uid = user.uid;
+
+      DocumentReference cardDetailsCollection =
+          FirebaseFirestore.instance.collection("CardDetails").doc(uid);
+
+      // Check documnet exists
+      bool documentExists = await cardDetailsCollection.get().then((doc) => doc.exists);
+
+      if(documentExists) {
+        await cardDetailsCollection.update({
+          "cardNumber": _cardNumberController.text,
+          "cardName": _cardNameController.text,
+          "expirationMonth": _selectedMonth ?? '',
+          "expirationYear": _selectedYear ?? '',
+          "cvv": _cvvController.text,
+        }).then((value) => 
+          print("Card Details Updated")
+        ).catchError((error) => 
+          print("Failed to update card details: $error")
+        
+        );
+      } else {
+        await cardDetailsCollection.set({
+          "cardNumber": _cardNumberController.text,
+          "cardName": _cardNameController.text,
+          "expirationMonth": _selectedMonth ?? '',
+          "expirationYear": _selectedYear ?? '',
+          "cvv": _cvvController.text,
+        }).then((value) => 
+          print("Card Details Added")
+        ).catchError((error) => 
+          print("Failed to add card details: $error")
+        );
+      }
+    }
+ }
 
   Future<void> _loadFormData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -278,15 +331,8 @@ class _CardFormState extends State<CardForm> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _saveFormData();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Form saved succesfully')),
-                    );
-                    final cardData = Provider.of<CardData>(context, listen: false);
-      cardData.setCardName(_cardNameController.text);
-      Navigator.pop(context, _cardNameController.text);
-                  }
+                  saveCardDetails();
+                  Navigator.pop(context);
                 },
                 child: const Text('Save'),
               ),
@@ -443,16 +489,8 @@ class _CardFormState extends State<CardForm> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _saveFormData();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Form saved succesfully')),
-                        );
-                      final cardData = Provider.of<CardData>(context, listen: false);
-      cardData.setCardName(_cardNameController.text);
-      Navigator.pop(context, _cardNameController.text);  
-                       
-                      }
+                      saveCardDetails();
+                      Navigator.pop(context);  
                     },
                     child: const Text('Save'),
                   ),

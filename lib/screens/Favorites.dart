@@ -2,6 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'Cart.dart';
+import 'Home.dart';
+import 'Profile.dart';
+
 class Favorites extends StatefulWidget {
   const Favorites({Key? key}) : super(key: key);
 
@@ -10,6 +14,8 @@ class Favorites extends StatefulWidget {
 }
 
 class _FavoritesState extends State<Favorites> {
+  int _selectedIndex = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +34,63 @@ class _FavoritesState extends State<Favorites> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+      ? Colors.grey
+      : Color.fromARGB(255, 153, 116, 159),    
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+          } else if (index == 1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites()));
+          } else if (index == 2) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+          } else if (index == 3) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '', nickname: '')));
+          }
+        },
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.home,
+              size: 28,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.favorite,
+              size: 28,
+            ),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.shopping_cart,
+              size: 28,
+            ),
+            label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+            icon: Icon(
+              Icons.person,
+              size: 28,
+            ),
+            label: 'Profile',
+          ),
+        ],
+        selectedLabelStyle: TextStyle(fontSize: 0),
       ),
     );
   }
@@ -80,8 +143,12 @@ class _FavoritesState extends State<Favorites> {
                         });
                       },
                       child: Icon(
-                        item.isFavorite ? Icons.favorite_outline : Icons.favorite,
-                        color: item.isFavorite ? Colors.black :Colors.red,
+                        item.isFavorite ? Icons.favorite : Icons.favorite_outline,
+color: item.isFavorite
+    ? Colors.red
+    : Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black,
                       ),
                     ),
                   ],
@@ -132,4 +199,3 @@ final List<Article> _articles = [
     category: "Cakes",
   ),
 ];
-

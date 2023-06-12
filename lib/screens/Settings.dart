@@ -5,14 +5,14 @@ import 'package:flutter_application_2/screens/Login.dart';
 import 'package:flutter_application_2/screens/Register.dart';
 import 'package:provider/provider.dart';//theme provider class
 
-class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+class AppSettings extends StatefulWidget {
+  const AppSettings({Key? key}) : super(key: key);
 
   @override
-  State<Settings> createState() => SettingsState();
+  State<AppSettings> createState() => AppSettingsState();
 }
 
-class SettingsState extends State<Settings> {
+class AppSettingsState extends State<AppSettings> {
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;

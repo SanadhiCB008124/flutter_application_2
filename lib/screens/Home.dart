@@ -58,9 +58,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: themeProvider.themeData.bottomNavigationBarTheme.backgroundColor,
         currentIndex: _selectedIndex,
-        fixedColor:Colors.white,
-        unselectedItemColor: Colors.white,
-        
+        selectedItemColor: Colors.white,
+       
+        unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+      ? Colors.grey
+      : Color.fromARGB(255, 153, 116, 159),  
         onTap: (int index) {
           setState(() {
             _selectedIndex = index;
@@ -72,7 +74,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           } else if (index == 2) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
           } else if (index == 3) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '',cardName: '',nickname: '',)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(savedLocation: '',nickname: '',)));
           }
         },
         items: <BottomNavigationBarItem>[
@@ -143,8 +145,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 hintText: 'What would you like?',
-                hintStyle: TextStyle(color: Color(0xFF4B1969),
-                fontSize: 15),
+                 hintStyle: Theme.of(context).brightness == Brightness.dark
+          ? TextStyle(color: Colors.grey)
+          : TextStyle(color: Color(0xFF4B1969),
+          fontSize: 17),
+    
+                
                 suffixIcon: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
@@ -327,7 +333,7 @@ class _CategoryPageState extends State<CategoryPage> {
                         child: Icon(
                           item.isFavorite ? Icons.favorite : Icons.favorite_outline,
   color: item.isFavorite
-      ? (themeProvider.isDark ? Colors.red : Colors.white)
+      ? (themeProvider.isDark ? Colors.red : Colors.red)
       : (themeProvider.isDark ? Colors.white : Colors.black),
                       
                         ),
