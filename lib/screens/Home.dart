@@ -135,73 +135,86 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget buildPortraitLayout(ThemeProvider themeProvider) {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.only(left: 10, top: 30),
-            child: const Text(
-              'Explore',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
+Widget buildPortraitLayout(ThemeProvider themeProvider) {
+  return Center(
+    child: Column(
+      children: [
+        SizedBox(height: 10),
+        Container(
+        
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          alignment: Alignment.topLeft,
+          padding: const EdgeInsets.only(left: 15, top: 30),
+          child: const Text(
+            'Explore !',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.all(8),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'What would you like?',
-                hintStyle: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.grey
-                      : Color(0xFF4B1969),
-                  fontSize: 17,
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                  },
+        ),
+        Container(
+          padding: const EdgeInsets.all(10),
+          margin: const EdgeInsets.all(6),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  
+                  color:  Colors.purple,
+                  width: 1,
                 ),
               ),
-              onChanged: (value) {},
-            ),
-          ),
-          SizedBox(
-            height: 60,
-            width: double.infinity,
-            child: TabBar(
-              controller: _tabController,
-              padding: const EdgeInsets.all(7),
-              indicator: BoxDecoration(
-                color: themeProvider.themeData.tabBarTheme!.indicatorColor,
-                borderRadius: BorderRadius.circular(15),
+              prefixIcon: Icon(Icons.search),
+              hintText: 'What would you like?',
+              hintStyle: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey
+                    : Color(0xFF4B1969),
+                fontSize: 17,
               ),
-              labelColor: themeProvider.themeData.tabBarTheme!.labelColor,
-              physics: const BouncingScrollPhysics(),
-              tabs: items.map((item) => Tab(text: item)).toList(),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {
+                  _searchController.clear();
+                },
+              ),
             ),
+            onChanged: (value) {},
           ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: items
-                  .map((category) => CategoryPage(category: category, articles: articles))
-                  .toList(),
+        ),
+        SizedBox(
+          height: 60,
+          width: double.infinity,
+          child: TabBar(
+            controller: _tabController,
+            padding: const EdgeInsets.all(7),
+            indicator: BoxDecoration(
+              color: themeProvider.themeData.tabBarTheme!.indicatorColor,
+              borderRadius: BorderRadius.circular(15),
             ),
+            labelColor: themeProvider.themeData.tabBarTheme!.labelColor,
+            physics: const BouncingScrollPhysics(),
+            tabs: items.map((item) => Tab(text: item)).toList(),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: items
+                .map((category) => CategoryPage(
+                      category: category,
+                      articles: articles,
+                    ))
+                .toList(),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget buildLandscapeLayout(ThemeProvider themeProvider) {
     return Center(
@@ -300,6 +313,7 @@ class _CategoryPageState extends State<CategoryPage> {
               price: item.price,
               image: item.imageUrl,
               description: item.description,
+             
             ),
           ),
         );

@@ -4,6 +4,8 @@ import 'Favorites.dart';
 import 'Home.dart';
 import 'Profile.dart';
 import 'theme_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Cart extends StatefulWidget {
   const Cart({Key? key}) : super(key: key);
@@ -14,107 +16,164 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   int value = 1;
-  int _selectedIndex = 2; // Add this line to define and initialize _selectedIndex
+  int _selectedIndex = 2;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cart'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _articles.length,
-              itemBuilder: (BuildContext context, int index) {
-                final item = _articles[index];
-                return buildCartItem(item);
-              },
-            ),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Cart'),
           ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            width: 300,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text(" Checkout"),
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+          body: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('Cart')
+                      .doc(user!.uid)
+                      .collection('Items')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final items = snapshot.data!.docs;
+
+                      if (items.isEmpty) {
+                        return Center(
+                          child: Text('No items in the cart'),
+                        );
+                      }
+
+                      return ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final cartItem = items[index];
+
+                          // Extract the fields from the cart item document
+                          final title = cartItem['title'];
+                          final price = cartItem['price'];
+                          final image = cartItem['image'];
+                          final quantity = cartItem['quantity'];
+
+                          return buildCartItem(
+                            title: title,
+                            price: price,
+                            image: image,
+                            quantity: quantity,
+                            themeProvider: themeProvider,
+                          );
+                        },
+                      );
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error retrieving cart items'),
+                      );
+                    }
+
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                width: 300,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(" Checkout"),
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                    ),
+                    backgroundColor:
+                        themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
                   ),
                 ),
-                backgroundColor: themeProvider.themeData.elevatedButtonTheme.style!.backgroundColor,
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-      unselectedItemColor: Theme.of(context).brightness == Brightness.dark
-      ? Colors.grey
-      : Color.fromARGB(255, 153, 116, 159),     
-        onTap: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-          } else if (index == 1) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Favorites()));
-          } else if (index == 2) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
-          } else if (index == 3) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-          }
-        },
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(
-              Icons.home,
-              size: 28,
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(
-              Icons.favorite,
-              size: 28,
-            ),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(
-              Icons.shopping_cart,
-              size: 28,
-            ),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            icon: Icon(
-              Icons.person,
-              size: 28,
-            ),
-            label: 'Profile',
-          ),
-        ],
-        selectedLabelStyle: TextStyle(fontSize: 0),
-      ),
+          bottomNavigationBar: orientation == Orientation.landscape
+              ? null
+              : BottomNavigationBar(
+                  backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: Colors.white,
+                  unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey
+                      : Color.fromARGB(255, 153, 116, 159),
+                  onTap: (int index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                    if (index == 0) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+                    } else if (index == 1) {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => Favorites()));
+                    } else if (index == 2) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Cart()));
+                    } else if (index == 3) {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => Profile()));
+                    }
+                  },
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                      icon: Icon(
+                        Icons.home,
+                        size: 28,
+                      ),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                      icon: Icon(
+                        Icons.favorite,
+                        size: 28,
+                      ),
+                      label: 'Favorites',
+                    ),
+                    BottomNavigationBarItem(
+                      backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        size: 28,
+                      ),
+                      label: 'Cart',
+                    ),
+                    BottomNavigationBarItem(
+                      backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                      icon: Icon(
+                        Icons.person,
+                        size: 28,
+                      ),
+                      label: 'Profile',
+                    ),
+                  ],
+                  selectedLabelStyle: TextStyle(fontSize: 0),
+                ),
+        );
+      },
     );
   }
 
-  Widget buildCartItem(Article item) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+  Widget buildCartItem({
+    required String title,
+    required String price,
+    required String image,
+    required int quantity,
+    required ThemeProvider themeProvider,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
       decoration: BoxDecoration(
@@ -132,7 +191,7 @@ class _CartState extends State<Cart> {
               borderRadius: BorderRadius.circular(8.0),
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage(item.imageUrl),
+                image: AssetImage(image),
               ),
             ),
           ),
@@ -144,7 +203,7 @@ class _CartState extends State<Cart> {
                 Container(
                   margin: EdgeInsets.only(top: 10),
                   child: Text(
-                    item.title,
+                    title,
                     style: const TextStyle(fontSize: 20),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -154,13 +213,16 @@ class _CartState extends State<Cart> {
                   alignment: Alignment.topRight,
                   child: Icon(
                     Icons.delete,
-                    color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
+                    size: 22,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey
+                        : Colors.black,
                   ),
                   margin: EdgeInsets.only(left: 200.0),
                 ),
                 Container(
                   child: Text(
-                    item.price,
+                    price,
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -172,16 +234,12 @@ class _CartState extends State<Cart> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          value++;
-                        });
-                      },
+                      onTap: () {},
                       child: Container(
                         margin: EdgeInsets.only(left: 22.0),
                         child: Icon(
                           Icons.add_box_rounded,
-                          size: 30.0,
+                          size: 22,
                           color: themeProvider.isDark ? Colors.grey : Colors.black,
                         ),
                       ),
@@ -205,7 +263,7 @@ class _CartState extends State<Cart> {
                       child: Container(
                         child: Icon(
                           Icons.remove_circle_rounded,
-                          size: 30.0,
+                          size: 22,
                           color: themeProvider.isDark ? Colors.grey : Colors.black,
                         ),
                       ),
@@ -220,32 +278,3 @@ class _CartState extends State<Cart> {
     );
   }
 }
-
-class Article {
-  final String title;
-  final String price;
-  final String imageUrl;
-  final String category;
-
-  Article({
-    required this.title,
-    required this.price,
-    required this.imageUrl,
-    required this.category,
-  });
-}
-
-final List<Article> _articles = [
-  Article(
-    title: "Macchiato",
-    price: "900.00",
-    imageUrl: "Assets/images/macchiato.jpg", // Update the image paths to use lowercase 'assets'
-    category: "Beverages",
-  ),
-  Article(
-    title: "Fudge",
-    price: "900.00",
-    imageUrl: "Assets/images/fudge.jpg",
-    category: "Cakes",
-  ),
-];

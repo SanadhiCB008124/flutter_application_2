@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'theme_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class Product extends StatefulWidget {
   final String title;
@@ -49,6 +52,29 @@ class _ProductState extends State<Product> {
     ),
   );
 }
+
+  void _addToCart() async {
+  // Get the current authenticated user
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    // Store product details in the Cart collection under the user ID
+    final cartItem = FirebaseFirestore.instance.collection('Cart').doc(user.uid).collection('Items').doc();
+
+    await cartItem.set({
+      'title': widget.title,
+      'price': widget.price,
+      'image': widget.image,
+      'quantity': value, 
+      'user': user.uid,
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Product added to cart')),
+    );
+  }
+}
+
 
 Widget buildPortraitLayout(ThemeProvider themeProvider) {
   return Scaffold(
@@ -160,7 +186,10 @@ Widget buildPortraitLayout(ThemeProvider themeProvider) {
             children: [
             
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+ _addToCart();
+
+                },
                 child: Text('Add to Cart'),
                 style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -274,7 +303,9 @@ Widget buildLandscapeLayout(ThemeProvider themeProvider) {
                         children: [
                          
                            ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                     _addToCart();
+                  },
                   child: Text('Add to Cart'),
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
