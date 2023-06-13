@@ -138,15 +138,21 @@ class _MapState extends State<Map> {
     final User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      // Store location details and nickname in Firebase collection
-      await FirebaseFirestore.instance.collection('MapDetails').doc(user.uid).set({
-        'latitude': _markerPosition.latitude,
-        'longitude': _markerPosition.longitude,
-        'address': savedLocations,
-        'nickname': nickname,
-        'userId':user.uid,
-     
-      });
+    // Get a reference to the MapDetails collection for the user
+    final CollectionReference mapDetailsRef =
+        FirebaseFirestore.instance.collection('MapDetails');
+
+    // Create a new document in the MapDetails collection
+    final DocumentReference newLocationRef = mapDetailsRef.doc();
+
+    // Add the location details to the new document
+    await newLocationRef.set({
+      'latitude': _markerPosition.latitude,
+      'longitude': _markerPosition.longitude,
+      'address': savedLocations,
+      'nickname': nickname,
+      'userId': user.uid,
+    });
 
       Navigator.push(
         context,

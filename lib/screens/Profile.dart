@@ -242,8 +242,8 @@ void fetchMapDetails() async {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 1,
-              itemBuilder: (context, _) {
+              itemCount: mapList.length,
+              itemBuilder: (context, Index) {
                 return Container(
                   child: Card(
                     color: Theme.of(context).brightness == Brightness.light
@@ -258,7 +258,7 @@ void fetchMapDetails() async {
                             children: [
                               Text(
                                 //location name
-                                 mapList.isNotEmpty ? mapList[0].nickname: '',
+                                 mapList.isNotEmpty ? mapList[Index].nickname: '',
                                 style:  TextStyle(
                                   fontSize: 20.0,
                                   color: Colors.black,
@@ -269,7 +269,7 @@ void fetchMapDetails() async {
                               Padding(padding: EdgeInsets.all(10.0)),
                               Text(
                                 //addreess
-                                  mapList.isNotEmpty ? mapList[0].address: '',
+                                  mapList.isNotEmpty ? mapList[Index].address: '',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   color: Colors.black,
