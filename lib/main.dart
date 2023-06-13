@@ -20,9 +20,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers:[
-        ChangeNotifierProvider<CardData>(
-          create: (_) => CardData(),
-        ),
+      
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider(),
         ),

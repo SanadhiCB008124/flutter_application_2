@@ -71,10 +71,15 @@ void fetchCardDetails() async {
       print('Card CVV: ${cardDetails.cardCVV}');
       print('------');
     });
+      setState(() {});
   });
 }
 void fetchMapDetails() async {
-    FirebaseFirestore.instance.collection('MapDetails').get().then((value) {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+
+    FirebaseFirestore.instance.collection('MapDetails')
+    .where('userId', isEqualTo: currentUser?.uid).
+    get().then((value) {
       value.docs.forEach((result) {
         setState(() {
           mapList.add(MapDetailsClass(
@@ -92,6 +97,7 @@ void fetchMapDetails() async {
         print('Address: ${mapDetails.address}');
         print('------');
       });
+       setState(() {});
     });
   }
 
@@ -241,7 +247,7 @@ void fetchMapDetails() async {
                 return Container(
                   child: Card(
                     color: Theme.of(context).brightness == Brightness.light
-                        ? const Color.fromARGB(255, 173, 140, 179)
+                        ?  Colors.white
                         : Colors.grey,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -337,7 +343,7 @@ void fetchMapDetails() async {
             Container(
               child: Card(
                 color: Theme.of(context).brightness == Brightness.light
-                    ? const Color.fromARGB(255, 173, 140, 179)
+                    ? Colors.white
                     : Colors.grey,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -431,12 +437,14 @@ class CardDetailsClass {
   final String cardExpiryyear;
   final String cardCVV;
 
+
   CardDetailsClass({
     required this.cardName,
     required this.cardNumber,
     required this.cardExpirymonth,
     required this.cardExpiryyear,
     required this.cardCVV,
+
   });
 }
 class MapDetailsClass {

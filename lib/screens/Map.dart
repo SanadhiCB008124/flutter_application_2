@@ -144,6 +144,8 @@ class _MapState extends State<Map> {
         'longitude': _markerPosition.longitude,
         'address': savedLocations,
         'nickname': nickname,
+        'userId':user.uid,
+     
       });
 
       Navigator.push(
