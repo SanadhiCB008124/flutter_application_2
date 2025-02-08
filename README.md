@@ -1,16 +1,38 @@
-# flutter_application_2
+# Sana Bakes Mobile Application
 
-A new Flutter project.
+**Technologies Used**:  
+- Flutter (Dart)
+- Firebase
+- Google Maps Flutter
 
-## Getting Started
+## Overview
 
-This project is a starting point for a Flutter application.
+Sana Bakes is a mobile application developed for a cafe, offering an intuitive interface that allows users to easily explore products and place orders. The app is designed with user experience in mind, featuring key functionalities such as geolocation-based delivery options, orientation adjustments, and dark mode support.
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Geolocation Services**: Integrated Google Maps Flutter to provide accurate and efficient delivery options based on the user's location.
+- **Orientation Adjustment**: The app automatically adjusts its layout for a seamless experience across different screen orientations (portrait/landscape).
+- **Dark Mode**: Personalized user experience with dark mode support, improving accessibility and catering to user preferences.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Installation
+
+To get started with the project, follow the steps below:
+
+1. Clone this repository:
+
+   ```bash
+   git clone https://github.com/your-username/sana-bakes-mobile-app.git
+   
+2. Install dependencies:
+ 
+   ```bash
+   flutter pub get
+
+3. Run the application:
+
+   ```bash
+    flutter run
+   
+
+   
